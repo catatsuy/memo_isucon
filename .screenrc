@@ -1,0 +1,16 @@
+escape ^Xx
+
+vbell off
+startup_message off
+altscreen on
+
+bind n next
+bind p prev
+bind k kill
+bind , title
+bind w windowlist -b
+
+shell "/bin/zsh"
+term screen-256color
+
+hardstatus alwayslastline '%{= kw}%02c:%s %{= .y}%H %L=%{= .b}%-w%46>%{= .r}%n %t*%{= .b}%+w%-16=%{= .y}[%l]'
