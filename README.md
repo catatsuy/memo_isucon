@@ -10,4 +10,4 @@ dotfiles
 
 ## .screenrc
 
-    screen -c ~/.screenrc_catatsuy
+    screen -S catatsuy -c ~/.screenrc_catatsuy
