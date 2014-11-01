@@ -1,5 +1,8 @@
 escape ^Xx
 
+defencoding utf8
+encoding utf8 utf8
+
 vbell off
 startup_message off
 altscreen on
