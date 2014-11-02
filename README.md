@@ -65,6 +65,24 @@ SET GLOBAL slow_query_log = 0;
 
 ## go
 
+### Martini でログを吐かない
+
+`MARTINI_ENV=production` ではログは消えない
+
+```go:app.go
+m := martini.Classic()
+devnull, err := os.Open(os.DevNull)
+if err != nil {
+	log.Fatal(err)
+}
+m.Map(log.New(devnull, "", 0))
+```
+
+本当に消したいなら martini のソースコードをいじるしかない
+
+
+### UNIX domain Socket
+
 ```go:app.go
 // グローバル変数にしておく
 var port = flag.Uint("port", 0, "port to listen")
