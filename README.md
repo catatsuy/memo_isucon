@@ -147,6 +147,10 @@ go func() {
 <-sigchan
 ```
 
+### Goアプリケーションの状況を見たい
+
+  * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
+
 ## Gitでpatchファイルを生成する
 
     git diff --no-prefix HEAD > ~/thisis.patch
