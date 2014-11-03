@@ -126,3 +126,29 @@ go func() {
     git diff --no-prefix HEAD > ~/thisis.patch
     patch --dry-run -p0 < thisis.patch
     patch -p0 < thisis.patch
+
+## おまじない集
+
+### dstat
+
+    dstat -tlamp
+
+これに cpu の状況を確認したいなら `--top-cpu-adv`，IO を確認したいなら `--top-io-adv` でブロッキング IO を確認したいなら `--top-bio-adv` を付ける
+
+### rsync
+
+    rsync -vau -e 'ssh -c arcfour256' /hoge/fuga/ catatsuy.org:/hoge/fuga/
+
+ディレクトリの最後には必ず `/` を付ける
+
+### netstat
+
+    netstat -tlnp
+
+tcp の通信だけ見れる
+
+### 参考 URL
+
+  * [にひりずむ::しんぷる - ngrep 便利！](http://blog.livedoor.jp/xaicron/archives/54419469.html)
+  * [dstatの便利なオプションまとめ - Qiita](http://qiita.com/harukasan/items/b18e484662943d834901)
+  * [Linux - rsync したいときの秘伝のタレ - Qiita](http://qiita.com/catatsuy/items/66aa402cbb4c9cffe66b)
