@@ -51,6 +51,9 @@ SET GLOBAL slow_query_log = 0;
 
 `sysctl -p` で適用
 
+  * cannot assign requested はローカルポート
+  * ip_conntrack: table full, dropping packet (`/var/log/messages`)
+
 ## nginx
 
 [Ruby - ltsv access log summary tool - Qiita](http://qiita.com/edvakf@github/items/3bdd46b53d65cf407fa2)
@@ -62,6 +65,29 @@ SET GLOBAL slow_query_log = 0;
 
 `/home/isucon` の権限を 755 にすること
 
+
+## ulimit
+
+`too many open files` はファイルディスクリプタ
+
+[ulimitが効かない不安を無くす設定 | 外道父の匠](http://blog.father.gedow.net/2012/08/08/ulimit-configuration/)
+
+`ulimit -n 65536` が一番良さそう
+
+```/etc/security/limits.conf
+isucon hard nofile 65535
+isucon soft nofile 65535
+```
+
+## gzip
+
+    gzip -r js css
+    gzip -k index.html
+
+## supervisord
+
+    sudo supervisorctl status
+    sudo supervisorctl reload
 
 ## go
 
