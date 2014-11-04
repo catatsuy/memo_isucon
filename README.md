@@ -95,6 +95,10 @@ isucon soft nofile 65535
 
 `MARTINI_ENV=production` ではログは消えない
 
+[DSAS開発者の部屋:ISUCON4 予選で workload=5 で 88000点出す方法 (lily white 参戦記)](http://dsas.blog.klab.org/archives/52171878.html)
+
+テンプレートのパース回数が減るらしいので有効にはすべき
+
 ```go:app.go
 m := martini.Classic()
 devnull, err := os.Open(os.DevNull)
