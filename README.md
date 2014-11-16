@@ -117,11 +117,12 @@ m.Map(log.New(devnull, "", 0))
 // グローバル変数にしておく
 var port = flag.Uint("port", 0, "port to listen")
 
-// 以下は main() で
-flag.Parse()
+func init() {
+	flag.Parse()
+}
 
+// 以下は main() で
 sigchan := make(chan os.Signal)
-signal.Notify(sigchan, os.Interrupt)
 signal.Notify(sigchan, syscall.SIGTERM)
 signal.Notify(sigchan, syscall.SIGINT)
 
