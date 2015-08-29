@@ -46,6 +46,13 @@ SET GLOBAL slow_query_log = 0;
 
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
+## tmpfs
+
+`/etc/fstab`
+
+```
+tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
+```
 
 ## sysctl.conf
 
