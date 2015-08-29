@@ -137,7 +137,10 @@ if *port == 0 {
 		}
 	}
 	l, err = net.Listen("unix", sock)
-	os.Chmod(sock, 0777)
+	cerr := os.Chmod(sock, 0666)
+	if cerr != nil {
+		panic(cerr.Error())
+	}
 } else {
 	l, err = net.ListenTCP("tcp", &net.TCPAddr{Port: int(*port)})
 }
