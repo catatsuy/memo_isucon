@@ -65,6 +65,9 @@ SET GLOBAL slow_query_log = 0;
 
 `/home/isucon` の権限を 755 にすること
 
+### OpenResty
+
+`./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module`
 
 ## ulimit
 
@@ -88,6 +91,20 @@ isucon soft nofile 65535
 
     sudo supervisorctl status
     sudo supervisorctl reload
+
+## netstat
+
+```
+sudo netstat -tlnp
+sudo netstat -tnp | grep ESTABLISHED
+```
+
+## lsof
+
+```
+sudo lsof -nP -i4TCP -sTCP:LISTEN
+sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
+```
 
 ## go
 
