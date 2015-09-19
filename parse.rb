@@ -32,7 +32,7 @@ logs = []
 while l = STDIN.gets
   l.strip!
   log = {}
-  l.split("\t").each{|kv|
+  l.split("\t").each do |kv|
     k,v = kv.split(":", 2)
     k = k.to_sym
     if k == :req_time || k == :app_time
@@ -40,7 +40,7 @@ while l = STDIN.gets
     else
       log[k] = v
     end
-  }
+  end
   if !since.nil? && log[:time] < since
     next
   end
@@ -56,30 +56,30 @@ template = {
 }
 tmp = {}
 
-logs.each {|log|
-  path = log[:path]
-  method = log[:method]
+logs.each do |line|
+  path = line[:path]#.gsub(/memo\/(\d+)/, 'memo/:id')
+  method = line[:method]
   key = method+'::'+path
   if tmp[key].nil?
     tmp[key] = template.clone
     tmp[key][:path] = path
     tmp[key][:method] = method
   end
-  tmp[key][:total_time] += log[:req_time]
+  tmp[key][:total_time] += line[:req_time]
   tmp[key][:total_count] += 1
-}
+end
 
 paths = []
-tmp.to_a.each {|path, detail|
+tmp.to_a.each do |path, detail|
   detail[:avg_time] = detail[:total_time] / detail[:total_count]
   paths.push(detail)
-}
+end
 
 def print_paths(paths)
   puts "\tavg\ttotal\tcount\tmethod\tpath"
-  paths.each {|path|
-    puts "\t#{sprintf("%.2f",path[:avg_time])}\t#{sprintf("%.2f",path[:total_time])}\t#{path[:total_count]}\t#{path[:method]}\t#{path[:path]}"
-  }
+  paths.each do |path|
+    puts "\t#{sprintf("%.2f", path[:avg_time])}\t#{sprintf("%.2f", path[:total_time])}\t#{path[:total_count]}\t#{path[:method]}\t#{path[:path]}"
+  end
 end
 
 puts "==============="

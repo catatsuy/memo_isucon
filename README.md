@@ -68,8 +68,8 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist -p
 ```
 
-`path = log[:path]` を gsub で適当に縮める
-（例：`log[:path].gsub(/memo\/(\d+)/, 'memo/:id').gsub(/recent\/(\d+)/, 'recent/:id')`）
+60行目の `path = line[:path]` を `gsub` で適当に縮める
+（例：`line[:path].gsub(/memo\/(\d+)/, 'memo/:id').gsub(/recent\/(\d+)/, 'recent/:id')`）
 
 `nginx -V` で configure オプション確認
 
