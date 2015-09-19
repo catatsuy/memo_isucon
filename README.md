@@ -41,6 +41,8 @@ SET GLOBAL slow_query_log = 0;
 
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
+Ubuntuなら`aptitude install percona-toolkit`
+
 ## tmpfs
 
 `/etc/fstab`
@@ -60,6 +62,12 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
 [Ruby - ltsv access log summary tool - Qiita](http://qiita.com/edvakf@github/items/3bdd46b53d65cf407fa2)
 
+`parse.rb`を使う
+
+```
+cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist -p
+```
+
 `path = log[:path]` を gsub で適当に縮める
 （例：`log[:path].gsub(/memo\/(\d+)/, 'memo/:id').gsub(/recent\/(\d+)/, 'recent/:id')`）
 
@@ -69,7 +77,10 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
 ### OpenResty
 
-`./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module`
+```
+sudo aptitude install libreadline-dev libncurses5-dev libpcre++-dev libssl-dev perl make build-essential
+./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module
+```
 
 ## ulimit
 
@@ -93,6 +104,12 @@ isucon soft nofile 65535
 
     sudo supervisorctl status
     sudo supervisorctl reload
+
+環境変数を渡したいとき
+
+```
+environment=MARTINI_ENV="production",PORT="8080"
+```
 
 ## netstat
 
