@@ -80,6 +80,9 @@ cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist -p
 ```
 sudo aptitude install libreadline-dev libncurses5-dev libpcre++-dev libssl-dev perl make build-essential
 ./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module
+
+# you need to have ldconfig in your PATH env when enabling luajit. と言われたら
+PATH=$PATH:/sbin ./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module
 ```
 
 ## ulimit
