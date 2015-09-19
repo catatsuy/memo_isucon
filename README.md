@@ -73,6 +73,8 @@ cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist -p
 
 `nginx -V` で configure オプション確認
 
+キャッシュがHITしているか確認したい場合はログに `"\tcache_status:$upstream_cache_status` を追加
+
 `/home/isucon` の権限を 755 にすること
 
 ### OpenResty
