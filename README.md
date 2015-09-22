@@ -43,6 +43,24 @@ SET GLOBAL slow_query_log = 0;
 
 Ubuntuなら`aptitude install percona-toolkit`
 
+#### innodb buffer poolを温める
+
+  * [お手軽InnoDBウォームアップを実現するMySQL::Warmerの話をGotanda.pm #2でしてきました | おそらくはそれさえも平凡な日々](http://www.songmu.jp/riji/entry/2014-09-22-gotandapm-mysql-warmer.html)
+  * [Kazuho@Cybozu Labs: MySQL のウォームアップ (InnoDB編)](http://labs.cybozu.co.jp/blog/kazuho/archives/2007/10/innodb_warmup.php)
+  * [日々の覚書: InnoDB buffer pool dumpで遊ぶ](http://yoku0825.blogspot.jp/2012/08/innodb-buffer-pool-dump.html)
+  * [InnoDBのウォームアップに別サーバでdumpしたib_buffer_poolを使ってみる - mikedaの日記](http://mikeda.hatenablog.com/entry/2015/09/21/142746)
+
+```
+cpanm MySQL::Warmer
+cpanm DBD::mysql
+mysql-warmup mydatabase -h db.example.com -u dbuser -p --dry-run
+```
+
+`--dry-run`で実行すべきクエリを取得できる。`--dry-run`を付けなければ実行してくれるが、自分の環境では実行できないクエリを実行しようとした。
+
+また時間制限もあるのでどれを実行するかは人間が決めるべき。
+
+
 ## tmpfs
 
 `/etc/fstab`
