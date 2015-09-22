@@ -56,7 +56,7 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 `sysctl -p` で適用
 
   * cannot assign requested はローカルポート
-  * ip_conntrack: table full, dropping packet (`/var/log/messages`)
+  * ip_conntrack: table full, dropping packet (`dmesg`)
 
 ## nginx
 
