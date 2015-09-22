@@ -169,7 +169,7 @@ signal.Notify(sigchan, syscall.SIGINT)
 
 var l net.Listener
 var err error
-sock := "/tmp/server.sock"
+sock := "/dev/shm/server.sock"
 if *port == 0 {
 	ferr := os.Remove(sock)
 	if ferr != nil {
