@@ -1,0 +1,18 @@
+escape ^Xx
+
+defencoding utf8
+encoding utf8 utf8
+
+vbell off
+startup_message off
+altscreen on
+
+bind n next
+bind p prev
+bind k kill
+bind , title
+bind w windowlist -b
+
+term screen-256color
+
+hardstatus alwayslastline '%L=%{= .b}%-w%46>%{= .r}%n %t*%{= .b}%+w%-16=%{= .y}[%l]'

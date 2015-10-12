@@ -3,6 +3,13 @@ ISUCON
 
 ISUCONのめも
 
+    curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+    # not installed curl
+    wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+
+`screen -S catatsuy -c ~/.screenrc_catatsuy`
+
+
 ## MySQL
 
 [MySQL :: MySQL 5.1 リファレンスマニュアル :: 4.10.6 ログ ファイルの保守](http://dev.mysql.com/doc/refman/5.1/ja/log-file-maintenance.html)
