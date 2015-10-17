@@ -292,6 +292,28 @@ go func() {
 
   * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
 
+### Goアプリケーションのプロファイリング
+
+それなりに面倒
+
+```go
+import "github.com/davecheney/profile"
+
+// main()の中で
+cfg := profile.Config{
+	CPUProfile: true,
+	// MemProfile:     true,
+	// BlockProfile:   true,
+	ProfilePath:    "/tmp/profile",
+	NoShutdownHook: true,
+}
+defer profile.Start(&cfg).Stop()
+```
+
+一度サーバーを停止すれば`/tmp/profile/cpu.pprof`ファイルができるはず
+
+`aptitude install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる
+
 ## Gitでpatchファイルを生成する
 
     git diff --no-prefix HEAD > ~/thisis.patch
