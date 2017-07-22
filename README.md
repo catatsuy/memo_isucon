@@ -316,6 +316,21 @@ defer profile.Start(&cfg).Stop()
 
 `aptitude install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる
 
+### egoを使う
+
+https://github.com/benbjohnson/ego
+
+`go get github.com/benbjohnson/ego/cmd/ego`
+
+```go
+//go:generate ego -package main templates
+func main() {
+}
+```
+
+`go generate`すれば`ego.go`が出力される
+
+
 ## Gitでpatchファイルを生成する
 
     git diff --no-prefix HEAD > ~/thisis.patch
