@@ -187,7 +187,9 @@ PATH=$PATH:/sbin ./configure --with-pcre-jit --with-luajit --with-http_gzip_stat
 
 `ulimit -n 65536` が一番良さそう
 
-```/etc/security/limits.conf
+`/etc/security/limits.conf`
+
+```
 isucon hard nofile 65535
 isucon soft nofile 65535
 ```
@@ -232,7 +234,7 @@ sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
 
 テンプレートのパース回数が減るらしいので有効にはすべき
 
-```go:app.go
+```go
 m := martini.Classic()
 devnull, err := os.Open(os.DevNull)
 if err != nil {
@@ -246,7 +248,7 @@ m.Map(log.New(devnull, "", 0))
 
 ### UNIX domain Socket
 
-```go:app.go
+```go
 // グローバル変数にしておく
 var port = flag.Uint("port", 0, "port to listen")
 
