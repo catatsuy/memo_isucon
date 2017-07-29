@@ -105,85 +105,160 @@ cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist -p
 ### OpenResty
 
 ```
-sudo aptitude install libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make build-essential
+sudo apt install libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make build-essential
 ./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module
 
 # you need to have ldconfig in your PATH env when enabling luajit. と言われたら
 PATH=$PATH:/sbin ./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module
+
+sudo apt install build-essential
+PATH=$PATH:/sbin ./nginx-build -d work -openresty -openssl -pcre -zlib
 ```
 
 `nginx -V`
 
 ```
-# nginx-full(Ubuntu15.04)
---with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2'
---with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now'
---prefix=/usr/share/nginx
---conf-path=/etc/nginx/nginx.conf
---http-log-path=/var/log/nginx/access.log
---error-log-path=/var/log/nginx/error.log
---lock-path=/var/lock/nginx.lock
---pid-path=/run/nginx.pid
---http-client-body-temp-path=/var/lib/nginx/body
---http-fastcgi-temp-path=/var/lib/nginx/fastcgi
---http-proxy-temp-path=/var/lib/nginx/proxy
---http-scgi-temp-path=/var/lib/nginx/scgi
---http-uwsgi-temp-path=/var/lib/nginx/uwsgi
---with-debug
---with-pcre-jit
---with-ipv6
---with-http_ssl_module
---with-http_stub_status_module
---with-http_realip_module
---with-http_auth_request_module
---with-http_addition_module
---with-http_dav_module
---with-http_geoip_module
---with-http_gzip_static_module
---with-http_image_filter_module
---with-http_spdy_module
---with-http_sub_module
---with-http_xslt_module
---with-mail
---with-mail_ssl_module
---add-module=/build/nginx-gKBGMk/nginx-1.6.2/debian/modules/nginx-auth-pam
---add-module=/build/nginx-gKBGMk/nginx-1.6.2/debian/modules/nginx-dav-ext-module
---add-module=/build/nginx-gKBGMk/nginx-1.6.2/debian/modules/nginx-echo
---add-module=/build/nginx-gKBGMk/nginx-1.6.2/debian/modules/nginx-upstream-fair
---add-module=/build/nginx-gKBGMk/nginx-1.6.2/debian/modules/ngx_http_substitutions_filter_module
+# nginx-full(Debian stretch)
+# nginx version: nginx/1.10.3
+./configure \
+ --with-cc-opt='-g -O2 -fdebug-prefix-map=/build/nginx-2tpxfc/nginx-1.10.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' \
+ --with-ld-opt='-Wl,-z,relro -Wl,-z,now' \
+ --prefix=/usr/share/nginx \
+ --conf-path=/etc/nginx/nginx.conf \
+ --http-log-path=/var/log/nginx/access.log \
+ --error-log-path=/var/log/nginx/error.log \
+ --lock-path=/var/lock/nginx.lock \
+ --pid-path=/run/nginx.pid \
+ --modules-path=/usr/lib/nginx/modules \
+ --http-client-body-temp-path=/var/lib/nginx/body \
+ --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+ --http-proxy-temp-path=/var/lib/nginx/proxy \
+ --http-scgi-temp-path=/var/lib/nginx/scgi \
+ --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
+ --with-debug \
+ --with-pcre-jit \
+ --with-ipv6 \
+ --with-http_ssl_module \
+ --with-http_stub_status_module \
+ --with-http_realip_module \
+ --with-http_auth_request_module \
+ --with-http_v2_module \
+ --with-http_dav_module \
+ --with-http_slice_module \
+ --with-threads \
+ --with-http_addition_module \
+ --with-http_geoip_module=dynamic \
+ --with-http_gunzip_module \
+ --with-http_gzip_static_module \
+ --with-http_image_filter_module=dynamic \
+ --with-http_sub_module \
+ --with-http_xslt_module=dynamic \
+ --with-stream=dynamic \
+ --with-stream_ssl_module \
+ --with-mail=dynamic \
+ --with-mail_ssl_module \
+ --add-dynamic-module=/build/nginx-2tpxfc/nginx-1.10.3/debian/modules/nginx-auth-pam \
+ --add-dynamic-module=/build/nginx-2tpxfc/nginx-1.10.3/debian/modules/nginx-dav-ext-module \
+ --add-dynamic-module=/build/nginx-2tpxfc/nginx-1.10.3/debian/modules/nginx-echo \
+ --add-dynamic-module=/build/nginx-2tpxfc/nginx-1.10.3/debian/modules/nginx-upstream-fair \
+ --add-dynamic-module=/build/nginx-2tpxfc/nginx-1.10.3/debian/modules/ngx_http_substitutions_filter_module
 
-# OpenResty 1.9.3.1
-# ./configure --with-pcre-jit --with-luajit --with-http_gzip_static_module
---prefix=/usr/local/openresty/nginx
---with-cc-opt=-O2
---add-module=../ngx_devel_kit-0.2.19
---add-module=../echo-nginx-module-0.58
---add-module=../xss-nginx-module-0.05
---add-module=../ngx_coolkit-0.2rc3
---add-module=../set-misc-nginx-module-0.29
---add-module=../form-input-nginx-module-0.11
---add-module=../encrypted-session-nginx-module-0.04
---add-module=../srcache-nginx-module-0.30
---add-module=../ngx_lua-0.9.16
---add-module=../ngx_lua_upstream-0.03
---add-module=../headers-more-nginx-module-0.26
---add-module=../array-var-nginx-module-0.04
---add-module=../memc-nginx-module-0.16
---add-module=../redis2-nginx-module-0.12
---add-module=../redis-nginx-module-0.3.7
---add-module=../rds-json-nginx-module-0.14
---add-module=../rds-csv-nginx-module-0.06
---with-ld-opt=-Wl,-rpath,/usr/local/openresty/luajit/lib
---with-pcre-jit
---with-http_gzip_static_module
---with-http_ssl_module
+# nginx(Debian stretch)
+# nginx version: nginx/1.12.1
+./configure \
+ --prefix=/etc/nginx \
+ --sbin-path=/usr/sbin/nginx \
+ --modules-path=/usr/lib/nginx/modules \
+ --conf-path=/etc/nginx/nginx.conf \
+ --error-log-path=/var/log/nginx/error.log \
+ --http-log-path=/var/log/nginx/access.log \
+ --pid-path=/var/run/nginx.pid \
+ --lock-path=/var/run/nginx.lock \
+ --http-client-body-temp-path=/var/cache/nginx/client_temp \
+ --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+ --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+ --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+ --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+ --user=nginx \
+ --group=nginx \
+ --with-compat \
+ --with-file-aio \
+ --with-threads \
+ --with-http_addition_module \
+ --with-http_auth_request_module \
+ --with-http_dav_module \
+ --with-http_flv_module \
+ --with-http_gunzip_module \
+ --with-http_gzip_static_module \
+ --with-http_mp4_module \
+ --with-http_random_index_module \
+ --with-http_realip_module \
+ --with-http_secure_link_module \
+ --with-http_slice_module \
+ --with-http_ssl_module \
+ --with-http_stub_status_module \
+ --with-http_sub_module \
+ --with-http_v2_module \
+ --with-mail \
+ --with-mail_ssl_module \
+ --with-stream \
+ --with-stream_realip_module \
+ --with-stream_ssl_module \
+ --with-stream_ssl_preread_module \
+ --with-cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/nginx-1.12.1/debian/debuild-base/nginx-1.12.1=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC' \
+ --with-ld-opt='-specs=/usr/share/dpkg/no-pie-link.specs -Wl,-z,relro -Wl,-z,now -Wl, --as-needed -pie'
+
+# OpenResty 1.11.2.4
+./configure
+ --prefix=/usr/local/openresty/nginx \
+ --with-cc-opt=-O2 \
+ --add-module=../ngx_devel_kit-0.3.0 \
+ --add-module=../echo-nginx-module-0.60 \
+ --add-module=../xss-nginx-module-0.05 \
+ --add-module=../ngx_coolkit-0.2rc3 \
+ --add-module=../set-misc-nginx-module-0.31 \
+ --add-module=../form-input-nginx-module-0.12 \
+ --add-module=../encrypted-session-nginx-module-0.06 \
+ --add-module=../srcache-nginx-module-0.31 \
+ --add-module=../ngx_lua-0.10.8 \
+ --add-module=../ngx_lua_upstream-0.06 \
+ --add-module=../headers-more-nginx-module-0.32 \
+ --add-module=../array-var-nginx-module-0.05 \
+ --add-module=../memc-nginx-module-0.18 \
+ --add-module=../redis2-nginx-module-0.14 \
+ --add-module=../redis-nginx-module-0.3.7 \
+ --add-module=../rds-json-nginx-module-0.14 \
+ --add-module=../rds-csv-nginx-module-0.07 \
+ --with-ld-opt=-Wl,-rpath,/usr/local/openresty/luajit/lib \
+ --with-pcre=/home/vagrant/work/openresty/1.11.2.4/openresty-1.11.2.4/../pcre-8.41 \
+ --with-openssl=/home/vagrant/work/openresty/1.11.2.4/openresty-1.11.2.4/../openssl-1.0.2l \
+ --with-zlib=/home/vagrant/work/openresty/1.11.2.4/openresty-1.11.2.4/../zlib-1.2.11 \
+ --with-http_ssl_module
+
+# recommend
+PATH=$PATH:/sbin ./nginx-build -d work -openresty -openssl -pcre -zlib \
+ --sbin-path=/usr/sbin/nginx \
+ --conf-path=/etc/nginx/nginx.conf \
+ --http-log-path=/var/log/nginx/access.log \
+ --error-log-path=/var/log/nginx/error.log \
+ --pid-path=/var/run/nginx.pid \
+ --lock-path=/var/lock/nginx.lock \
+ --http-client-body-temp-path=/var/lib/nginx/body \
+ --http-proxy-temp-path=/var/lib/nginx/proxy \
+ --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+ --with-debug \
+ --with-pcre-jit \
+ --with-http_gunzip_module \
+ --with-http_gzip_static_module \
+ --with-http_v2_module \
 ```
 
 ## ulimit
 
 `too many open files` はファイルディスクリプタ
 
-[ulimitが効かない不安を無くす設定 | 外道父の匠](http://blog.father.gedow.net/2012/08/08/ulimit-configuration/)
+  * [ulimitが効かない不安を無くす設定 | 外道父の匠](http://blog.father.gedow.net/2012/08/08/ulimit-configuration/)
+  * [systemd時代に困らないためのlimits設定 | 外道父の匠](http://blog.father.gedow.net/2016/03/28/limits-of-systemd/)
 
 `ulimit -n 65536` が一番良さそう
 
@@ -192,6 +267,14 @@ PATH=$PATH:/sbin ./configure --with-pcre-jit --with-luajit --with-http_gzip_stat
 ```
 isucon hard nofile 65535
 isucon soft nofile 65535
+```
+
+systemdの方が楽。
+
+```
+[Service]
+LimitNOFILE=1006500
+LimitNPROC=1006500
 ```
 
 ## gzip
