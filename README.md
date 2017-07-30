@@ -382,6 +382,50 @@ go func() {
 <-sigchan
 ```
 
+### Goでインメモリキャッシュ
+
+``` go
+type cacheSlice struct {
+	// Setが多いならsync.Mutex
+	sync.RWMutex
+	items map[int]int
+}
+
+func NewCacheSlice() *cacheSlice {
+	m := make(map[int]int)
+	c := &cacheSlice{
+		items: m,
+	}
+	return c
+}
+
+func (c *cacheSlice) Set(key int, value int) {
+	c.Lock()
+	c.items[key] = value
+	c.Unlock()
+}
+
+func (c *cacheSlice) Get(key int) (int, bool) {
+	c.RLock()
+	v, found := c.items[key]
+	c.RUnlock()
+	return v, found
+}
+
+func (c *cacheSlice) Incr(key int, n int) {
+	c.Lock()
+	v, found := c.items[key]
+	if found {
+		c.items[key] = v + n
+	} else {
+		c.items[key] = n
+	}
+	c.Unlock()
+}
+
+var mCache = NewCacheSlice()
+```
+
 ### Goアプリケーションの状況を見たい
 
   * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
