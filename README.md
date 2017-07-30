@@ -48,7 +48,7 @@ SET GLOBAL slow_query_log = 0;
 
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
-Ubuntuなら`aptitude install percona-toolkit`
+Ubuntuなら`apt install percona-toolkit`
 
 #### innodb buffer poolを温める
 
@@ -397,7 +397,7 @@ defer profile.Start(&cfg).Stop()
 
 一度サーバーを停止すれば`/tmp/profile/cpu.pprof`ファイルができるはず
 
-`aptitude install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる
+`apt install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる
 
 ### egoを使う
 
