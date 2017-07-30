@@ -44,11 +44,17 @@ SET GLOBAL slow_query_log = 0;
 
 [Download the Latest Percona Toolkit for Debian and RPM Packages](http://www.percona.com/downloads/percona-toolkit/LATEST/)
 
-    yum localinstall -y http://percona.com/get/percona-toolkit.rpm
+```
+# RedHat
+sudo yum install https://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm
+sudo yum install percona-toolkit
+
+# Debian
+apt install percona-toolkit
+```
 
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
-Ubuntuなら`apt install percona-toolkit`
 
 #### innodb buffer poolを温める
 
@@ -75,6 +81,8 @@ mysql-warmup mydatabase -h db.example.com -u dbuser -p --dry-run
 ```
 tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 ```
+
+`sudo mount -a`で適用
 
 ## sysctl.conf
 
