@@ -90,6 +90,7 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
   * cannot assign requested はローカルポート
   * ip_conntrack: table full, dropping packet (`dmesg`)
+    * 有効でない場合は `modprobe ip_conntrack`
 
 ## nginx
 
