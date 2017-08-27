@@ -469,22 +469,17 @@ func changeData() {
 それなりに面倒
 
 ```go
-import "github.com/davecheney/profile"
+import "github.com/pkg/profile"
 
 // main()の中で
-cfg := profile.Config{
-	CPUProfile: true,
-	// MemProfile:     true,
-	// BlockProfile:   true,
-	ProfilePath:    "/tmp/profile",
-	NoShutdownHook: true,
-}
-defer profile.Start(&cfg).Stop()
+defer profile.Start(profile.ProfilePath("/tmp/profile")).Stop()
+// memory
+defer profile.Start(profile.MemProfile, profile.ProfilePath("/tmp/profile")).Stop()
 ```
 
-一度サーバーを停止すれば`/tmp/profile/cpu.pprof`ファイルができるはず
+`/tmp/profile/cpu.pprof`ファイルとかができる。
 
-`apt install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる
+`apt install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。Go1.9からバイナリを指定する必要は無い。
 
 ### egoを使う
 
