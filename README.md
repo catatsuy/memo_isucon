@@ -426,6 +426,40 @@ func (c *cacheSlice) Incr(key int, n int) {
 var mCache = NewCacheSlice()
 ```
 
+### zero time cache
+
+[DSAS開発者の部屋:ISUCON6予選をトップ通過しました](http://dsas.blog.klab.org/archives/2016-09-20/isucon5q.html)
+
+``` go
+var (
+	mUpdateHeavyProcess sync.Mutex
+	dataLastUpdated     time.Time
+	mChangeDataControl  sync.Mutex
+)
+
+func updateHeavyProcess() {
+	now := time.Now()
+	mUpdateHeavyProcess.Lock()
+	defer mUpdateHeavyProcess.UnLock()
+
+	if dataLastUpdated.After(now) {
+		return
+	}
+	dataLastUpdated := time.Now()
+
+	// Heavy Process
+}
+
+func changeData() {
+	mChangeDataControl.Lock()
+
+	// change data
+
+	updateHeavyProcess()
+	mChangeDataControl.UnLock()
+}
+```
+
 ### Goアプリケーションの状況を見たい
 
   * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
