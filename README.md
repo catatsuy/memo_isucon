@@ -500,6 +500,9 @@ func main() {
 
 `go generate`すれば`ego.go`が出力される
 
+### Goの書き方
+
+  * [SliceTricks · golang/go Wiki](https://github.com/golang/go/wiki/SliceTricks)
 
 ## Gitでpatchファイルを生成する
 
