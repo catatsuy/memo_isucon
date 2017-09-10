@@ -499,6 +499,70 @@ func main() {
 
   * [SliceTricks · golang/go Wiki](https://github.com/golang/go/wiki/SliceTricks)
 
+## lua
+
+### luaのデバッグ
+
+```
+resty -e 'ngx.say("Hello, World!")'
+```
+
+#### cjson
+
+```lua
+local res = {
+  test = "hello",
+}
+
+local cjson = require "cjson"
+ngx.say(cjson.encode(res))
+```
+
+### example
+
+```
+content_by_lua_block {
+  local res = ngx.location.capture("/some_other_location")
+  if res then
+    ngx.say("status: ", res.status)
+    ngx.say("body:")
+    ngx.print(res.body)
+  end
+}
+
+access_by_lua_block {
+  -- check the client IP address is in our black list
+  if ngx.var.remote_addr == "132.5.72.3" then
+    ngx.exit(ngx.HTTP_FORBIDDEN)
+  end
+
+  -- check if the URI contains bad words
+  if ngx.var.uri and string.match(ngx.var.request_body, "evil") then
+    return ngx.redirect("/terms_of_use.html")
+  end
+}
+
+access_by_lua_file /path/to/access.lua;
+ontent_by_lua_file /path/to/content.lua;
+```
+
+### ライブラリ
+
+  * [openresty/lua-resty-mysql: Nonblocking Lua MySQL driver library for ngx_lua or OpenResty](https://github.com/openresty/lua-resty-mysql)
+  * [openresty/lua-resty-redis: Lua redis client driver for the ngx_lua based on the cosocket API](https://github.com/openresty/lua-resty-redis)
+  * [openresty/lua-resty-memcached: Lua memcached client driver for the ngx_lua based on the cosocket API](https://github.com/openresty/lua-resty-memcached)
+
+### ドキュメント
+
+  * [Directives - OpenResty Reference](https://openresty-reference.readthedocs.io/en/latest/Directives/)
+  * [openresty/lua-nginx-module: Embed the Power of Lua into NGINX HTTP servers](https://github.com/openresty/lua-nginx-module)
+  * [lua-nginx-module を使いこなす - Qiita](http://qiita.com/kz_takatsu/items/e94805a8e3cc285f9b33)
+
+### luaの書き方
+
+  * [Lua Cheat Sheet](https://gist.github.com/doches/2219649)
+  * [catatsuy/demo_test_nginx_mysql](https://github.com/catatsuy/demo_test_nginx_mysql)
+
 ## Gitでpatchファイルを生成する
 
     git diff --no-prefix HEAD > ~/thisis.patch
