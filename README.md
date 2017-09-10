@@ -259,7 +259,7 @@ PATH=$PATH:/sbin ./nginx-build -d work -openresty -openssl -pcre -zlib \
  --with-pcre-jit \
  --with-http_gunzip_module \
  --with-http_gzip_static_module \
- --with-http_v2_module \
+ --with-http_v2_module
 ```
 
 ## ulimit
