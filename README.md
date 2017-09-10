@@ -471,6 +471,7 @@ func changeData() {
 ```go
 import "github.com/pkg/profile"
 
+// cf: https://godoc.org/github.com/pkg/profile
 // main()の中で
 defer profile.Start(profile.ProfilePath("/tmp/profile")).Stop()
 // memory
@@ -480,6 +481,19 @@ defer profile.Start(profile.MemProfile, profile.ProfilePath("/tmp/profile")).Sto
 `/tmp/profile/cpu.pprof`ファイルとかができる。
 
 `apt install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。Go1.9からバイナリを指定する必要は無い。
+
+#### net/http/pprof
+
+``` go
+import _ "net/http/pprof"
+
+// blocking profiler
+// cf: http://blog.livedoor.jp/sonots/archives/39879160.html
+runtime.SetBlockProfileRate(1)
+go func() {
+	log.Println(http.Serve(l, nil))
+}()
+```
 
 ### egoを使う
 
