@@ -687,7 +687,7 @@ func hash() {
 resty -e 'ngx.say("Hello, World!")'
 ```
 
-#### cjson
+### cjson
 
 ```lua
 local res = {
@@ -724,6 +724,12 @@ access_by_lua_block {
 
 access_by_lua_file /path/to/access.lua;
 ontent_by_lua_file /path/to/content.lua;
+```
+
+### error log
+
+``` lua
+ngx.log(ngx.STDERR, err)
 ```
 
 ### ライブラリ
