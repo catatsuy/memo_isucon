@@ -460,6 +460,31 @@ func changeData() {
 }
 ```
 
+### GoでMySQLの接続をUNIXドメインソケットにする
+
+https://github.com/go-sql-driver/mysql
+
+```go
+// tcp
+dsn := fmt.Sprintf(
+	"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
+	user,
+	password,
+	host,
+	port,
+	dbname,
+)
+
+// unix domain socket
+dsn := fmt.Sprintf(
+	"%s:%s@unix(%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
+	user,
+	password,
+	socket,
+	dbname,
+)
+```
+
 ### Goアプリケーションの状況を見たい
 
   * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
