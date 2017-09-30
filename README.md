@@ -552,20 +552,23 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
+var conn redis.Conn
+
+func init() {
+	pool := newPool(":6379")
+	conn = pool.Get()
+}
+
 // https://godoc.org/github.com/garyburd/redigo/redis
 // https://redis.io/commands
 func main() {
-	pool := newPool(":6379")
-	conn := pool.Get()
 	defer conn.Close()
 
-	_, err := conn.Do("SET", "key", "value")
-	if err != nil {
-		panic(err)
-	}
-
-	s, err := redis.String(conn.Do("GET", "key"))
-	fmt.Println(s)
+	flush()
+	getSet()
+	uniqueKey()
+	list()
+	hash()
 }
 
 func newPool(addr string) *redis.Pool {
@@ -575,131 +578,138 @@ func newPool(addr string) *redis.Pool {
 		Dial:        func() (redis.Conn, error) { return redis.Dial("tcp", addr) },
 	}
 }
-```
-
-#### redis
-
-``` go
-package main
-
-import (
-	"fmt"
-
-	redis "gopkg.in/redis.v3"
-)
-
-var rd *redis.Client
-
-func init() {
-	rd = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-		DB:   0,
-	})
-}
-
-func main() {
-	flush()
-	uniquekey()
-	list()
-	hash()
-}
 
 func flush() {
-	err := rd.FlushAll().Err()
+	_, err := conn.Do("FLUSHALL")
 	if err != nil {
 		panic(err)
 	}
 }
 
-func getset() {
-	err := rd.Set("key", "value", 0).Err()
+func getSet() {
+	_, err := conn.Do("SET", "key", "value")
 	if err != nil {
 		panic(err)
 	}
 
-	val, err := rd.Get("key").Result()
+	s, err := redis.String(conn.Do("GET", "key"))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("key", val)
+	fmt.Println(s)
 
-	val2, err := rd.Get("key2").Result()
-	if err == redis.Nil {
+	s2, err := redis.String(conn.Do("GET", "key2"))
+
+	if err == redis.ErrNil {
 		fmt.Println("key2 does not exist")
 	} else if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("key2", val2)
+		fmt.Println("key2", s2)
 	}
 }
 
-func uniquekey() {
-	id, _ := rd.Incr("pk").Result()
+func uniqueKey() {
+	id, _ := conn.Do("Incr", "pk")
 	fmt.Println("id", id)
-	id, _ = rd.Incr("pk").Result()
+
+	id, _ = conn.Do("Incr", "pk")
 	fmt.Println("id", id)
-	id, _ = rd.Incr("pk").Result()
+
+	id, _ = conn.Do("Incr", "pk")
 	fmt.Println("id", id)
 }
 
 func list() {
-	err := rd.LPush("foo", "1").Err()
+	_, err := conn.Do("RPUSH", "mylist", "one")
 	if err != nil {
 		panic(err)
 	}
-	err = rd.LPush("foo", "2").Err()
-	if err != nil {
-		panic(err)
-	}
-	err = rd.RPush("foo", "2").Err()
-	if err != nil {
-		panic(err)
-	}
-	val, err := rd.RPopLPush("foo", "foo").Result()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("foo", val)
 
-	val, err = rd.LPop("foo").Result()
+	_, err = conn.Do("RPUSH", "mylist", "two")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("foo", val)
 
-	vals, err := rd.LRange("foo", 0, 10).Result()
+	_, err = conn.Do("RPUSH", "mylist", "three")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("foos", vals)
+
+	_, err = conn.Do("RPUSH", "mylist", "four")
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = conn.Do("RPUSH", "otherlist", "five")
+	if err != nil {
+		panic(err)
+	}
+
+	res, err := redis.String(conn.Do("RPOPLPUSH", "mylist", "otherlist"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
+
+	res, err = redis.String(conn.Do("LPOP", "otherlist"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
+
+	res, err = redis.String(conn.Do("LPOP", "otherlist"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res)
+
+	fmt.Println("LRANGE")
+
+	ss, err := redis.Strings(conn.Do("LRANGE", "mylist", 1, 10))
+	if err != nil {
+		panic(err)
+	}
+
+	for _, s := range ss {
+		fmt.Println(s)
+	}
 }
 
 func hash() {
-	err := rd.HSet("bar", "hoge", "1").Err()
+	res, err := redis.Int(conn.Do("HSET", "myhash", "key1", "value1"))
 	if err != nil {
 		panic(err)
 	}
-	err = rd.HSet("bar", "piyo", "2").Err()
-	if err != nil {
-		panic(err)
-	}
-	hoge, err := rd.HGet("bar", "hoge").Int64()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("bar.hoge", hoge)
+	// 1
+	fmt.Println(res)
 
-	keys, err := rd.HGetAll("bar").Result()
+	res, err = redis.Int(conn.Do("HSET", "myhash", "key1", "value2"))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("bar.keys", keys)
+	// 0
+	fmt.Println(res)
 
-	m, err := rd.HGetAllMap("bar").Result()
+	_, err = redis.Int(conn.Do("HSET", "myhash", "key2", "valueee"))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("bar", m)
+
+	s, err := redis.String(conn.Do("HGET", "myhash", "key1"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(s)
+
+	m, err := redis.StringMap(conn.Do("HGETALL", "myhash"))
+	if err != nil {
+		panic(err)
+	}
+
+	for k, v := range m {
+		fmt.Printf("key: %s; val: %s\n", k, v)
+	}
 }
 ```
 
