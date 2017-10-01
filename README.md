@@ -552,10 +552,13 @@ import (
 	"github.com/garyburd/redigo/redis"
 )
 
-var conn redis.Conn
+var (
+	conn redis.Conn
+	pool *redis.Pool
+)
 
 func init() {
-	pool := newPool(":6379")
+	pool = newPool(":6379")
 	conn = pool.Get()
 }
 
@@ -578,6 +581,12 @@ func newPool(addr string) *redis.Pool {
 		Dial:        func() (redis.Conn, error) { return redis.Dial("tcp", addr) },
 	}
 }
+
+// func serveHome(w http.ResponseWriter, r *http.Request) {
+// 	conn := pool.Get()
+// 	defer conn.Close()
+// 	// ...
+// }
 
 func flush() {
 	_, err := conn.Do("FLUSHALL")
