@@ -351,7 +351,7 @@ signal.Notify(sigchan, syscall.SIGTERM)
 signal.Notify(sigchan, syscall.SIGINT)
 
 var li net.Listener
-var err error
+var herr error
 hsock := "/dev/shm/server.sock"
 if hport == 0 {
 	ferr := os.Remove(hsock)
@@ -360,15 +360,15 @@ if hport == 0 {
 			panic(ferr.Error())
 		}
 	}
-	li, err = net.Listen("unix", hsock)
+	li, herr = net.Listen("unix", hsock)
 	cerr := os.Chmod(hsock, 0666)
 	if cerr != nil {
 		panic(cerr.Error())
 	}
 } else {
-	li, err = net.ListenTCP("tcp", &net.TCPAddr{Port: hport})
+	li, herr = net.ListenTCP("tcp", &net.TCPAddr{Port: hport})
 }
-if err != nil {
+if herr != nil {
 	panic(err.Error())
 }
 go func() {
