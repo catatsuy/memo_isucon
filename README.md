@@ -341,42 +341,39 @@ m.Map(log.New(devnull, "", 0))
 ### UNIX domain Socket
 
 ```go
-// グローバル変数にしておく
-var port = flag.Uint("port", 0, "port to listen")
+var hport int
 
-func init() {
-	flag.Parse()
-}
+flag.IntVar(&hport, "port", 0, "port to listen")
+flag.Parse()
 
-// 以下は main() で
 sigchan := make(chan os.Signal)
 signal.Notify(sigchan, syscall.SIGTERM)
 signal.Notify(sigchan, syscall.SIGINT)
 
-var l net.Listener
+var li net.Listener
 var err error
 sock := "/dev/shm/server.sock"
-if *port == 0 {
+if hport == 0 {
 	ferr := os.Remove(sock)
 	if ferr != nil {
 		if !os.IsNotExist(ferr) {
 			panic(ferr.Error())
 		}
 	}
-	l, err = net.Listen("unix", sock)
+	li, err = net.Listen("unix", sock)
 	cerr := os.Chmod(sock, 0666)
 	if cerr != nil {
 		panic(cerr.Error())
 	}
 } else {
-	l, err = net.ListenTCP("tcp", &net.TCPAddr{Port: int(*port)})
+	li, err = net.ListenTCP("tcp", &net.TCPAddr{Port: hport})
 }
 if err != nil {
 	panic(err.Error())
 }
 go func() {
 	// func Serve(l net.Listener, handler Handler) error
-	log.Println(http.Serve(l, nil))
+	log.Println(http.Serve(li, nil))
 }()
 
 <-sigchan
