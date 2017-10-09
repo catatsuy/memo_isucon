@@ -99,7 +99,7 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 `parse.rb`を使う
 
 ```
-cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist -p
+cat access.log | ruby parse.rb --since='2015-10-05T02:23' | gist
 ```
 
 60行目の `path = line[:path]` を `gsub` で適当に縮める
