@@ -13,6 +13,7 @@ bind k kill
 bind , title
 bind w windowlist -b
 
+# shell "/bin/bash"
 term screen-256color
 
 hardstatus alwayslastline '%L=%{= .b}%-w%46>%{= .r}%n %t*%{= .b}%+w%-16=%{= .y}[%l]'
