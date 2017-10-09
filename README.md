@@ -340,6 +340,8 @@ m.Map(log.New(devnull, "", 0))
 
 ### UNIX domain Socket
 
+注：変数名が被りにくいように少し変な変数名にしてある。
+
 ```go
 var hport int
 
@@ -357,19 +359,19 @@ if hport == 0 {
 	ferr := os.Remove(hsock)
 	if ferr != nil {
 		if !os.IsNotExist(ferr) {
-			panic(ferr.Error())
+			panic(ferr)
 		}
 	}
 	li, herr = net.Listen("unix", hsock)
 	cerr := os.Chmod(hsock, 0666)
 	if cerr != nil {
-		panic(cerr.Error())
+		panic(cerr)
 	}
 } else {
 	li, herr = net.ListenTCP("tcp", &net.TCPAddr{Port: hport})
 }
 if herr != nil {
-	panic(err.Error())
+	panic(herr)
 }
 go func() {
 	// func Serve(l net.Listener, handler Handler) error
