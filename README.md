@@ -484,6 +484,21 @@ dsn := fmt.Sprintf(
 )
 ```
 
+### GoでMySQLのコネクションを制限する
+
+デフォルトは無限なので制限した方が良い。
+
+``` go
+maxConns := os.Getenv("DB_MAXOPENCONNS")
+if maxConns != "" {
+	i, err := strconv.Atoi(maxConns)
+	if err != nil {
+		panic(err)
+	}
+	db.SetMaxOpenConns(i)
+}
+```
+
 ### Goアプリケーションの状況を見たい
 
   * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
