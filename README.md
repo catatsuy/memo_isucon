@@ -527,12 +527,12 @@ https://github.com/benbjohnson/ego
 `go get github.com/benbjohnson/ego/cmd/ego`
 
 ```go
-//go:generate ego -package main templates
+//go:generate ego
 func main() {
 }
 ```
 
-`go generate`すれば`ego.go`が出力される
+`go generate`すれば`*.ego.go`が出力される。
 
 ### Goの書き方
 
