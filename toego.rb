@@ -1,3 +1,5 @@
+print "<%\npackage main\n\nfunc MyTmpl(w io.Writer, e struct {\n}) { %>"
+
 while line = STDIN.gets
   # {{ => <%  }} => %>
   line.gsub!(/{{/u, "<%")
@@ -15,5 +17,10 @@ while line = STDIN.gets
   # . => <%=
   line.gsub!(/<%\s+([.$])([a-zA-Z_.]+)\s+%>/u, '<%= \1\2 %>')
 
+  # <%= . => <%= e.
+  line.gsub!(/<%= \.([A-Z])/u, '<%= e.\1')
+
   print line
 end
+
+print "\n<% } %>\n"
