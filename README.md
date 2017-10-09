@@ -352,16 +352,16 @@ signal.Notify(sigchan, syscall.SIGINT)
 
 var li net.Listener
 var err error
-sock := "/dev/shm/server.sock"
+hsock := "/dev/shm/server.sock"
 if hport == 0 {
-	ferr := os.Remove(sock)
+	ferr := os.Remove(hsock)
 	if ferr != nil {
 		if !os.IsNotExist(ferr) {
 			panic(ferr.Error())
 		}
 	}
-	li, err = net.Listen("unix", sock)
-	cerr := os.Chmod(sock, 0666)
+	li, err = net.Listen("unix", hsock)
+	cerr := os.Chmod(hsock, 0666)
 	if cerr != nil {
 		panic(cerr.Error())
 	}
