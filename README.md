@@ -823,7 +823,7 @@ ngx.log(ngx.STDERR, err)
 
 ### rsync
 
-    rsync -vau -e 'ssh -c arcfour256' /hoge/fuga/ catatsuy.org:/hoge/fuga/
+    rsync -vau -e 'ssh -c aes128-ctr' /hoge/fuga/ catatsuy.org:/hoge/fuga/
 
 ディレクトリの最後には必ず `/` を付ける
 
