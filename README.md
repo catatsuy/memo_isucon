@@ -351,9 +351,12 @@ m.Map(log.New(devnull, "", 0))
 ```go
 var hport int
 
-flag.IntVar(&hport, "port", 0, "port to listen")
-flag.Parse()
+func init() {
+	flag.IntVar(&hport, "port", 0, "port to listen")
+	flag.Parse()
+}
 
+// 以下は main() で
 sigchan := make(chan os.Signal)
 signal.Notify(sigchan, syscall.SIGTERM)
 signal.Notify(sigchan, syscall.SIGINT)
