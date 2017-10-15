@@ -514,8 +514,6 @@ if maxConns != "" {
 
 ### Goアプリケーションのプロファイリング
 
-それなりに面倒
-
 ```go
 import "github.com/pkg/profile"
 
@@ -529,6 +527,28 @@ defer profile.Start(profile.MemProfile, profile.ProfilePath("/tmp/profile")).Sto
 `/tmp/profile/cpu.pprof`ファイルとかができる。
 
 `apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。（Go1.8以下の場合バイナリを指定する必要がある `go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`）。
+
+文字列はimmutableなので文字列結合はimmutableな文字列を生成し続けることになる。バイト列ならそういうことはないので予めある程度の大きさのバイトのスライスを作成してappendする方がよい。
+
+``` go
+b := make([]byte, 0, 40)
+b = append(b, request.ID...)
+b = append(b, ' ')
+b = append(b, client.Addr().String()...)
+b = append(b, ' ')
+b = time.Now().AppendFormat(b, "2006-01-02 15:04:05.999999999 -0700 MST")
+r = string(b)
+```
+
+profiling結果に`runtime.mallocgc`が多い場合はこういった小さいメモリのアロケートが多い可能性がある。
+
+  * [Debugging performance issues in Go programs | Intel® Software](https://software.intel.com/en-us/blogs/2014/05/10/debugging-performance-issues-in-go-programs)
+  * [High Performance Go](http://talks.godoc.org/github.com/davecheney/high-performance-go-workshop/high-performance-go-workshop.slide)
+  * [Profiling Go Programs - The Go Blog](https://blog.golang.org/profiling-go-programs)
+
+Goの正規表現は基本遅い。リクエストの度に生成は絶対にしてはいけない。できれば`strings`パッケージの関数に置き換えられそうなら置き換えること。
+
+  * [Remove regex match use Index and replace - walf443/yisucon_practice](https://github.com/walf443/yisucon_practice/pull/18/files)
 
 #### net/http/pprof
 
