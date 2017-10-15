@@ -528,7 +528,7 @@ defer profile.Start(profile.MemProfile, profile.ProfilePath("/tmp/profile")).Sto
 
 `/tmp/profile/cpu.pprof`ファイルとかができる。
 
-`apt install graphviz`してから`go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。Go1.9からバイナリを指定する必要は無い。
+`apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。（Go1.8以下の場合バイナリを指定する必要がある `go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`）。
 
 #### net/http/pprof
 
