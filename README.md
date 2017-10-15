@@ -543,6 +543,42 @@ go func() {
 }()
 ```
 
+### templateの使い方
+
+  * [Writing Web Applications - The Go Programming Language](https://golang.org/doc/articles/wiki/#tmp_10)
+  * [(*Template) Funcs](https://golang.org/pkg/html/template/#Template.Funcs)
+  * [template.ParseFiles](https://golang.org/pkg/html/template/#ParseFiles)
+
+リクエストの度にtemplateを毎回Parseするのはマズい。グローバル変数を定義して起動時にParseを済ませておく。ただし`template.FuncMap`を使っている場合はParseする前に呼び出す必要がある。
+
+ISUCONの問題はGo以外の他言語で初期実装が作られてからGo実装が作られるという事情上、`template.FuncMap`を使わない実装になっている可能性はかなり低い。
+
+``` go
+var templates *template.Template
+
+func init() {
+	// FuncMapを使わない場合
+	templates = template.Must(template.ParseFiles("templates/edit.html", "templates/view.html"))
+
+	// FuncMapを使う場合
+	fmap := template.FuncMap{}
+	templates = template.Must(template.New("").Funcs(fmap).ParseFiles("templates/edit.html", "templates/view.html"))
+}
+
+func main() {
+	// ...
+	err := templates.ExecuteTemplate(w, "view.html", struct{}{})
+}
+```
+
+`.ExecuteTemplate`に渡すのはtemplateの名前でParseFilesを使った場合はファイル名になる（ディレクトリ名は含まない）。これはテンプレート内で`{{template}}`を使用することで呼び出すこともできる。ParseFilesには使うすべてのファイルを渡す。
+
+  * [templateをグローバルにキャッシュする by catatsuy · Pull Request #19 · walf443/isucon5-practice](https://github.com/walf443/isucon5-practice/pull/19/files)
+  * [remove render by catatsuy · Pull Request #21 · walf443/yisucon_practice](https://github.com/walf443/yisucon_practice/pull/21/files)
+
+ISUCON5予選のようにリクエストの度に変わる関数を`template.FuncMap{}`を渡す場合、毎回Parseする必要が出てしまう。変数で渡すようにするなどして該当関数を排除してから行う。
+
+
 ### egoを使う
 
 https://github.com/benbjohnson/ego
