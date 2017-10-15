@@ -21,6 +21,12 @@ ISUCONのめも
     mysqldump -uroot データベース名 > dump.sql
     mysql -uroot データベース名 < dump.sql
 
+スキーマだけを得たい場合
+
+```
+mysqldump -u root --compact --no-data database | grep -v "^SET" | grep -v "^/\*\!" | perl -ple 's@CREATE TABLE @\nCREATE TABLE @g'
+```
+
 ### Slow Query
 
 #### 有効にする
