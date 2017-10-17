@@ -324,26 +324,6 @@ sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
 
 ## go
 
-### Martini でログを吐かない
-
-`MARTINI_ENV=production` ではログは消えない
-
-[DSAS開発者の部屋:ISUCON4 予選で workload=5 で 88000点出す方法 (lily white 参戦記)](http://dsas.blog.klab.org/archives/52171878.html)
-
-テンプレートのパース回数が減るらしいので有効にはすべき
-
-```go
-m := martini.Classic()
-devnull, err := os.Open(os.DevNull)
-if err != nil {
-	log.Fatal(err)
-}
-m.Map(log.New(devnull, "", 0))
-```
-
-本当に消したいなら martini のソースコードをいじるしかない
-
-
 ### UNIX domain Socket
 
 注：変数名が被りにくいように少し変な変数名にしてある。
@@ -613,8 +593,42 @@ func main() {
 
 `go generate`すれば`*.ego.go`が出力される。
 
+
+### jsonが遅い場合
+
+https://github.com/json-iterator/go
+
+``` go
+import (
+	jsoniter "github.com/json-iterator/go"
+)
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
+```
+
+### Martini でログを吐かない
+
+`MARTINI_ENV=production` ではログは消えない
+
+[DSAS開発者の部屋:ISUCON4 予選で workload=5 で 88000点出す方法 (lily white 参戦記)](http://dsas.blog.klab.org/archives/52171878.html)
+
+テンプレートのパース回数が減るらしいので有効にはすべき
+
+```go
+m := martini.Classic()
+devnull, err := os.Open(os.DevNull)
+if err != nil {
+	log.Fatal(err)
+}
+m.Map(log.New(devnull, "", 0))
+```
+
+本当に消したいなら martini のソースコードをいじるしかない
+
+
 ### Goの書き方
 
+  * [The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec)
   * [SliceTricks · golang/go Wiki](https://github.com/golang/go/wiki/SliceTricks)
 
 ### Redis
