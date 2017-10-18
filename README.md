@@ -485,6 +485,7 @@ if maxConns != "" {
 		panic(err)
 	}
 	db.SetMaxOpenConns(i)
+	db.SetMaxIdleConns(i)
 }
 ```
 
