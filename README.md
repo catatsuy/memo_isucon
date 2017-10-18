@@ -100,7 +100,7 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
 ## nginx
 
-[Ruby - ltsv access log summary tool - Qiita](http://qiita.com/edvakf@github/items/3bdd46b53d65cf407fa2)
+[Ruby - ltsv access log summary tool - Qiita](https://qiita.com/edvakf@github/items/3bdd46b53d65cf407fa2)
 
 `parse.rb`を使う
 
@@ -523,7 +523,7 @@ r = string(b)
 profiling結果に`runtime.mallocgc`が多い場合はこういった小さいメモリのアロケートが多い可能性がある。
 
   * [Debugging performance issues in Go programs | Intel® Software](https://software.intel.com/en-us/blogs/2014/05/10/debugging-performance-issues-in-go-programs)
-  * [High Performance Go](http://talks.godoc.org/github.com/davecheney/high-performance-go-workshop/high-performance-go-workshop.slide)
+  * [High Performance Go](https://talks.godoc.org/github.com/davecheney/high-performance-go-workshop/high-performance-go-workshop.slide)
   * [Profiling Go Programs - The Go Blog](https://blog.golang.org/profiling-go-programs)
 
 Goの正規表現は基本遅い。リクエストの度に生成は絶対にしてはいけない。できれば`strings`パッケージの関数に置き換えられそうなら置き換えること。
@@ -879,7 +879,7 @@ ngx.log(ngx.STDERR, err)
 
   * [Directives - OpenResty Reference](https://openresty-reference.readthedocs.io/en/latest/Directives/)
   * [openresty/lua-nginx-module: Embed the Power of Lua into NGINX HTTP servers](https://github.com/openresty/lua-nginx-module)
-  * [lua-nginx-module を使いこなす - Qiita](http://qiita.com/kz_takatsu/items/e94805a8e3cc285f9b33)
+  * [lua-nginx-module を使いこなす - Qiita](https://qiita.com/kz_takatsu/items/e94805a8e3cc285f9b33)
 
 ### luaの書き方
 
@@ -915,5 +915,5 @@ tcp の通信だけ見れる
 ### 参考 URL
 
   * [にひりずむ::しんぷる - ngrep 便利！](http://blog.livedoor.jp/xaicron/archives/54419469.html)
-  * [dstatの便利なオプションまとめ - Qiita](http://qiita.com/harukasan/items/b18e484662943d834901)
-  * [Linux - rsync したいときの秘伝のタレ - Qiita](http://qiita.com/catatsuy/items/66aa402cbb4c9cffe66b)
+  * [dstatの便利なオプションまとめ - Qiita](https://qiita.com/harukasan/items/b18e484662943d834901)
+  * [Linux - rsync したいときの秘伝のタレ - Qiita](https://qiita.com/catatsuy/items/66aa402cbb4c9cffe66b)
