@@ -527,6 +527,8 @@ defer profile.Start(profile.MemProfile, profile.ProfilePath("/tmp/profile")).Sto
 
 `apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。（Go1.8以下の場合バイナリを指定する必要がある `go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`）。
 
+### Goでボトルネックになりやすいところ
+
 文字列はimmutableなので文字列結合はimmutableな文字列を生成し続けることになる。バイト列ならそういうことはないので予めある程度の大きさのバイトのスライスを作成してappendする方がよい。
 
 ``` go
