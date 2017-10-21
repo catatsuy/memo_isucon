@@ -489,6 +489,24 @@ if maxConns != "" {
 }
 ```
 
+### Goでプレースホルダ置換
+
+[DSAS開発者の部屋:go-sql-driver/mysql でプレースホルダ置換をサポートしました](http://dsas.blog.klab.org/archives/52191467.html)
+
+`interpolateParams=true`をつける。
+
+```go
+// tcp
+dsn := fmt.Sprintf(
+	"%s:%s@tcp(%s:%s)/%s?interpolateParams=true&charset=utf8mb4&parseTime=true&loc=Local",
+	user,
+	password,
+	host,
+	port,
+	dbname,
+)
+```
+
 ### Goアプリケーションの状況を見たい
 
   * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
