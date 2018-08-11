@@ -572,7 +572,7 @@ go func() {
 
 リクエストの度にtemplateを毎回Parseするのはマズい。グローバル変数を定義して起動時にParseを済ませておく。ただし`template.FuncMap`を使っている場合はParseする前に呼び出す必要がある。
 
-ISUCONの問題はGo以外の他言語で初期実装が作られてからGo実装が作られるという事情上、`template.FuncMap`を使わない実装になっている可能性はかなり低い。
+ISUCONの問題はGo以外の他言語で初期実装が作られてからGo実装が作られるという事情上、`template.FuncMap`を使う実装になっている可能性はかなり高い。
 
 ``` go
 var templates *template.Template
@@ -923,7 +923,7 @@ ngx.log(ngx.STDERR, err)
 
 ### rsync
 
-    rsync -vau -e 'ssh -c aes128-ctr' /hoge/fuga/ catatsuy.org:/hoge/fuga/
+    rsync -vau /hoge/fuga/ catatsuy.org:/hoge/fuga/
 
 ディレクトリの最後には必ず `/` を付ける
 
