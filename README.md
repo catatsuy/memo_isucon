@@ -518,12 +518,14 @@ import "github.com/pkg/profile"
 
 // cf: https://godoc.org/github.com/pkg/profile
 // main()の中で
-defer profile.Start(profile.ProfilePath("/tmp/profile")).Stop()
+defer profile.Start().Stop()
+// ファイル名を指定したい
+defer profile.Start(profile.ProfilePath("/home/isucon/profile")).Stop()
 // memory
-defer profile.Start(profile.MemProfile, profile.ProfilePath("/tmp/profile")).Stop()
+defer profile.Start(profile.MemProfile).Stop()
 ```
 
-`/tmp/profile/cpu.pprof`ファイルとかができる。
+`/tmp/profile/cpu.pprof`ファイルとかができる。空ファイルができた場合はdeferが呼ばれていないので何とかする。
 
 `apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。（Go1.8以下の場合バイナリを指定する必要がある `go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`）。
 
