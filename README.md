@@ -322,6 +322,14 @@ sudo lsof -nP -i4TCP -sTCP:LISTEN
 sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
 ```
 
+## git init
+
+``` shell
+git init
+git config --global user.name "isucon"
+git config --global user.email "isucon@isucon"
+```
+
 ## deploy
 
 ### .ssh/config
