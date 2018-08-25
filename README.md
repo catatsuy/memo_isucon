@@ -61,8 +61,7 @@ SET GLOBAL slow_query_log = 0;
 
 ```
 # RedHat
-sudo yum install https://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm
-sudo yum install percona-toolkit
+yum install percona-toolkit
 
 # Debian
 apt install percona-toolkit
