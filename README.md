@@ -322,6 +322,42 @@ sudo lsof -nP -i4TCP -sTCP:LISTEN
 sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
 ```
 
+## deploy
+
+### .ssh/config
+
+```
+Host isu
+  HostName xxx
+  User isucon
+  ServerAliveInterval 5
+  ServerAliveCountMax 12
+```
+
+### deploy.sh
+
+``` shell
+## deploy.sh
+
+#!/bin/bash -x
+
+./deploy_body.sh | notify_slack
+
+## deploy_body.sh
+#!/bin/bash -x
+
+echo "start deploy ${USER}"
+GOOS=linux go build -v isubata
+for server in isu; do
+    ssh -t $server "sudo systemctl stop isubata.golang.service"
+    scp ./isubata $server:/home/isucon/isubata/webapp/go/isubata
+    rsync -av ./src/isubata/views/ $server:/home/isucon/isubata/webapp/go/src/isubata/views/
+    ssh -t $server "sudo systemctl start isubata.golang.service"
+done
+
+echo "finish deploy ${USER}"
+```
+
 ## go
 
 ### UNIX domain Socket
