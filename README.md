@@ -12,9 +12,18 @@ ISUCONのめも
 
 ## MySQL
 
-[MySQL :: MySQL 5.1 リファレンスマニュアル :: 4.10.6 ログ ファイルの保守](http://dev.mysql.com/doc/refman/5.1/ja/log-file-maintenance.html)
+```
+create database isubata;
+CREATE USER 'isucon'@'localhost' IDENTIFIED BY 'isucon';
+GRANT ALL PRIVILEGES ON isubata.* TO 'isucon'@'localhost';
+```
 
-    grant all privileges on wordpress.* to 'wp_user'@'localhost' identified by 'wp_pass' with grant option;
+MySQL8以降で簡単なパスワードを設定できなくなった。my.cnfで以下のようにする。
+
+```my.cnf
+validate_password.length = 0
+validate_password.policy = LOW
+```
 
 ### mysqldump
 
