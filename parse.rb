@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 # cat access.log | ruby parse.rb
-# if --since is given, logs before the specified time are ignored
+# If --before is given, it targets the log before the number of seconds
 #  (by string comparison)
-# eg. --since='2013-11-05T02:23'
+# eg. --before=300
 
 # supported accesslog format : http://i2bskn.hateblo.jp/entry/2013/05/14/003726 style
 #
@@ -22,10 +22,16 @@
 #
 # time:2013-11-05T02:23:14+09:00  host:202.232.134.129    xff:-   method:GET      path:/  status:200      ua:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36  req_size:599    req_time:0.005  res_size:2951   body_size:2711  app_time:0.005
 
-since = nil
+before = nil
 if ARGV.length
-  m = /--since=(.*)/.match(ARGV[0])
-  since = m[1] if m
+  m = /--before=(.*)/.match(ARGV[0])
+  before = m[1].to_i if m
+end
+
+if before
+  before_t = (Time.now - before).strftime('%Y-%m-%dT%H:%M:%S')
+else
+  before_t = nil
 end
 
 logs = []
@@ -41,7 +47,7 @@ while l = STDIN.gets
       log[k] = v
     end
   end
-  if !since.nil? && log[:time] < since
+  if !before_t.nil? && log[:time] < before_t
     next
   end
   logs.push(log)
