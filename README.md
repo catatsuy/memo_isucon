@@ -299,6 +299,53 @@ func (c *cacheSlice) Incr(key int, n int) {
 var mCache = NewCacheSlice()
 ```
 
+### Goでexpire付きのインメモリキャッシュ
+
+```go
+type configValue struct {
+	value  string
+	expire time.Time
+}
+
+type configCache struct {
+	sync.RWMutex
+	items map[string]configValue
+}
+
+func NewConfigCache() *configCache {
+	m := make(map[string]configValue)
+	c := &configCache{
+		items: m,
+	}
+	return c
+}
+
+func (c *configCache) Set(key string, value string) {
+	defer c.Unlock()
+	val := configValue{
+		value:  value,
+		expire: time.Now().Add(80 * time.Second),
+	}
+	c.Lock()
+	c.items[key] = val
+}
+
+func (c *configCache) Get(key string) (string, bool) {
+	defer c.RUnlock()
+	c.RLock()
+	v, found := c.items[key]
+	if !found {
+		return "", false
+	}
+	if time.Now().After(v.expire) {
+		return "", false
+	}
+	return v.value, found
+}
+
+var CacheConfig = NewConfigCache()
+```
+
 ### Go側でSQLをtraceする
 
 ```go
@@ -396,6 +443,31 @@ defer profile.Start(profile.MemProfile).Stop()
 `/tmp/profile/cpu.pprof`ファイルとかができる。空ファイルができた場合はdeferが呼ばれていないので何とかする。
 
 `apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。（Go1.8以下の場合バイナリを指定する必要がある `go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`）。
+
+### measure
+
+pprofだとCPU時間しか取れず、HTTPリクエストのようなIO待ちになる処理は分からない。 https://github.com/najeira/measure を使えば実時間を取れる。
+
+https://github.com/tenntenn/isucontools/tree/master/cmd/measuregen
+
+を使うとソースコードを変更できる。
+
+```go
+func getReportMeasure(w http.ResponseWriter, r *http.Request) {
+	stats := measure.GetStats()
+	stats.SortDesc("sum")
+
+	fmt.Fprintf(w, "key\tcount\tsum\tmin\tmax\tavg\trate\tp95\n")
+
+	// print stats in TSV format
+	for _, s := range stats {
+		fmt.Fprintf(w, "%s\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
+			s.Key, s.Count, s.Sum, s.Min, s.Max, s.Avg, s.Rate, s.P95)
+	}
+}
+```
+
+一度コピーしてエディタに貼り付けてからGoogle Docsに貼り付けるといい感じになる。
 
 ### Goでボトルネックになりやすいところ
 
