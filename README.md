@@ -166,7 +166,7 @@ git config --global user.email "isucon@isucon"
 ### .ssh/config
 
 ```
-Host isu
+Host isu01
   HostName xxx
   User isucon
   ServerAliveInterval 5
@@ -178,19 +178,23 @@ Host isu
 ``` shell
 ## deploy.sh
 
-#!/bin/bash -x
+#!/bin/bash
+
+set -x
 
 ./deploy_body.sh | notify_slack
 
 ## deploy_body.sh
-#!/bin/bash -x
+#!/bin/bash
+
+set -x
 
 echo "start deploy ${USER}"
 GOOS=linux go build -v isucari
-for server in isu; do
+for server in isu01; do
     ssh -t $server "sudo systemctl stop isucari.golang.service"
     scp ./isucari $server:/home/isucon/isucari/webapp/go/isucari
-    rsync -av ./src/isucari/views/ $server:/home/isucon/isucari/webapp/go/src/isucari/views/
+    rsync -vau ../sql/ $server:/home/isucon/isucari/webapp/sql/
     ssh -t $server "sudo systemctl start isucari.golang.service"
 done
 
@@ -287,40 +291,6 @@ func (c *cacheSlice) Incr(key int, n int) {
 }
 
 var mCache = NewCacheSlice()
-```
-
-### zero time cache
-
-[DSAS開発者の部屋:ISUCON6予選をトップ通過しました](http://dsas.blog.klab.org/archives/2016-09-20/isucon5q.html)
-
-``` go
-var (
-	mUpdateHeavyProcess sync.Mutex
-	dataLastUpdated     time.Time
-	mChangeDataControl  sync.Mutex
-)
-
-func updateHeavyProcess() {
-	now := time.Now()
-	mUpdateHeavyProcess.Lock()
-	defer mUpdateHeavyProcess.UnLock()
-
-	if dataLastUpdated.After(now) {
-		return
-	}
-	dataLastUpdated := time.Now()
-
-	// Heavy Process
-}
-
-func changeData() {
-	mChangeDataControl.Lock()
-
-	// change data
-
-	updateHeavyProcess()
-	mChangeDataControl.UnLock()
-}
 ```
 
 ### GoでMySQLの接続をUNIXドメインソケットにする
