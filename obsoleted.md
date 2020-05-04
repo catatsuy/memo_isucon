@@ -46,7 +46,7 @@ m.Map(log.New(devnull, "", 0))
 
 本当に消したいなら martini のソースコードをいじるしかない
 
-### egoを使う
+## egoを使う
 
 https://github.com/benbjohnson/ego
 
@@ -59,16 +59,3 @@ func main() {
 ```
 
 `go generate`すれば`*.ego.go`が出力される。
-
-
-### jsonが遅い場合
-
-https://github.com/json-iterator/go
-
-``` go
-import (
-	jsoniter "github.com/json-iterator/go"
-)
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
-```

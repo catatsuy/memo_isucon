@@ -536,6 +536,21 @@ func main() {
 
 ISUCON5予選のようにリクエストの度に変わる関数を`template.FuncMap{}`を渡す場合、毎回Parseする必要が出てしまう。変数で渡すようにするなどして該当関数を排除してから行う。
 
+
+### jsonが遅い場合
+
+https://github.com/json-iterator/go
+
+``` go
+import (
+	jsoniter "github.com/json-iterator/go"
+)
+
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
+```
+
+互換性はないが https://github.com/buger/jsonparser はもっと早い。
+
 ### Goの書き方
 
   * [The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec)
