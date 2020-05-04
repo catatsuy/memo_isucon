@@ -1,5 +1,7 @@
 #!/bin/bash
 
-ln -sf ~/dotfiles_catatsuy/.screenrc ~/.screenrc_catatsuy
+ln -sf ~/dotfiles_catatsuy/.tmux.conf ~/.tmux_catatsuy.conf
 
-echo "screen -S catatsuy -c ~/.screenrc_catatsuy"
+echo "tmux new -s catatsuy"
+echo "tmux a -t catatsuy"
+echo "tmux kill-session -t catatsuy"
