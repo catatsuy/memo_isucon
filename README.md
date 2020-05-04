@@ -9,9 +9,6 @@ curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh |
 wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
 ```
 
-`screen -S catatsuy -c ~/.screenrc_catatsuy`
-
-
 ## MySQL
 
 ```
@@ -122,8 +119,6 @@ cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+
 https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 
 キャッシュがHITしているか確認したい場合はログに `"\tcache_status:$upstream_cache_status"` を追加
-
-`/home/isucon` の権限を 755 にすること
 
 
 ## ulimit
