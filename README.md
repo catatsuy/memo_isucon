@@ -3,9 +3,11 @@ ISUCON
 
 ISUCONのめも
 
-    curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
-    # not installed curl
-    wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+```
+curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+# not installed curl
+wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+```
 
 `screen -S catatsuy -c ~/.screenrc_catatsuy`
 
@@ -27,8 +29,10 @@ validate_password.policy = LOW
 
 ### mysqldump
 
-    mysqldump -uroot データベース名 > dump.sql
-    mysql -uroot データベース名 < dump.sql
+```
+mysqldump -uroot データベース名 > dump.sql
+mysql -uroot データベース名 < dump.sql
+```
 
 スキーマだけを得たい場合
 
@@ -136,8 +140,10 @@ LimitNPROC=1006500
 
 ## gzip
 
-    gzip -r js css
-    gzip -k index.html
+```
+gzip -r js css
+gzip -k index.html
+```
 
 ## netstat
 
@@ -481,27 +487,35 @@ var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 ## Gitでpatchファイルを生成する
 
-    git diff --no-prefix HEAD > ~/thisis.patch
-    patch --dry-run -p0 < thisis.patch
-    patch -p0 < thisis.patch
+```
+git diff --no-prefix HEAD > ~/thisis.patch
+patch --dry-run -p0 < thisis.patch
+patch -p0 < thisis.patch
+```
 
 ## おまじない集
 
 ### dstat
 
-    dstat -tlamp
+```
+dstat -tlamp
+```
 
 これに cpu の状況を確認したいなら `--top-cpu-adv`，IO を確認したいなら `--top-io-adv` でブロッキング IO を確認したいなら `--top-bio-adv` を付ける
 
 ### rsync
 
-    rsync -vau /hoge/fuga/ catatsuy.org:/hoge/fuga/
+```
+rsync -vau /hoge/fuga/ catatsuy.org:/hoge/fuga/
+```
 
 ディレクトリの最後には必ず `/` を付ける
 
 ### netstat
 
-    netstat -tlnp
+```
+netstat -tlnp
+```
 
 tcp の通信だけ見れる
 
