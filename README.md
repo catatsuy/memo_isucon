@@ -321,18 +321,18 @@ func NewConfigCache() *configCache {
 }
 
 func (c *configCache) Set(key string, value string) {
-	defer c.Unlock()
 	val := configValue{
 		value:  value,
 		expire: time.Now().Add(80 * time.Second),
 	}
 	c.Lock()
+	defer c.Unlock()
 	c.items[key] = val
 }
 
 func (c *configCache) Get(key string) (string, bool) {
-	defer c.RUnlock()
 	c.RLock()
+	defer c.RUnlock()
 	v, found := c.items[key]
 	if !found {
 		return "", false
