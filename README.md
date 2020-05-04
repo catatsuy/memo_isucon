@@ -541,34 +541,6 @@ func main() {
 
 ISUCON5予選のようにリクエストの度に変わる関数を`template.FuncMap{}`を渡す場合、毎回Parseする必要が出てしまう。変数で渡すようにするなどして該当関数を排除してから行う。
 
-
-### egoを使う
-
-https://github.com/benbjohnson/ego
-
-`go get github.com/benbjohnson/ego/cmd/ego`
-
-```go
-//go:generate ego
-func main() {
-}
-```
-
-`go generate`すれば`*.ego.go`が出力される。
-
-
-### jsonが遅い場合
-
-https://github.com/json-iterator/go
-
-``` go
-import (
-	jsoniter "github.com/json-iterator/go"
-)
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
-```
-
 ### Goの書き方
 
   * [The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec)
