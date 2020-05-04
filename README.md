@@ -299,6 +299,23 @@ func (c *cacheSlice) Incr(key int, n int) {
 var mCache = NewCacheSlice()
 ```
 
+### Go側でSQLをtraceする
+
+```go
+import (
+	_ "github.com/go-sql-driver/mysql"
+	proxy "github.com/shogo82148/go-sql-proxy"
+)
+
+proxy.RegisterTracer()
+db, err = sql.Open("mysql:trace", dsn)
+```
+
+デフォルトだとprepare statementを実行するので、そのタイミングで`ErrSkip`が発生して余計なログが出る。
+`interpolateParams=true`を使えばprepare statementを実行しなくなる。
+
+cf: https://github.com/DataDog/dd-trace-go/issues/270
+
 ### GoでMySQLの接続をUNIXドメインソケットにする
 
 https://github.com/go-sql-driver/mysql
