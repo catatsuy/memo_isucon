@@ -586,7 +586,7 @@ func getReportMeasure(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-一度コピーしてエディタに貼り付けてからGoogle Docsに貼り付けるといい感じになる。
+一度コピーしてエディタに貼り付けてからGoogle Docsに貼り付けるといい感じになる。curlとpbcopyでも可。
 
 #### net/http/pprof
 
