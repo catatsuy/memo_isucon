@@ -513,46 +513,31 @@ if err != nil {
 
 ### Goアプリケーションのプロファイリング
 
+pprofではネットワークで待ちになっている時間などは顕在化しないので、ボトルネックがアプリケーションのCPUに移らない限り、取る意味はほぼない。
+
+https://godoc.org/github.com/pkg/profile を使うと楽。必ずStopを呼び出す必要があるので以下のようにして無理矢理呼び出すのがおすすめ。
+
+デフォルトは`ioutil.TempDir("", "profile")`で指定されたディレクトリにファイルができる。環境変数`TMPDIR`にもよるが、Linuxなら`/tmp/profile/cpu.pprof`というファイルができるはず。systemdならPrivateTmpがデフォルトで有効なので注意。
+
 ```go
 import "github.com/pkg/profile"
 
-// cf: https://godoc.org/github.com/pkg/profile
-// main()の中で
-defer profile.Start().Stop()
-// ファイル名を指定したい
-defer profile.Start(profile.ProfilePath("/home/isucon/profile")).Stop()
-// memory
-defer profile.Start(profile.MemProfile).Stop()
-```
+var (
+	profileProfile interface{ Stop() }
+)
 
-`/tmp/profile/cpu.pprof`ファイルとかができる。空ファイルができた場合はdeferが呼ばれていないので何とかする。
+func init() {
+	profileProfile = profile.Start(profile.ProfilePath("/home/isucon/profile"))
+	// memory
+	// profile.Start(profile.MemProfile, profile.ProfilePath("/home/isucon/profile"))
+}
 
-`apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。（Go1.8以下の場合バイナリを指定する必要がある `go tool pprof --pdf app /tmp/profile/cpu.pprof > tmp.pdf`）。
-
-### measure
-
-pprofだとCPU時間しか取れず、HTTPリクエストのようなIO待ちになる処理は分からない。 https://github.com/najeira/measure を使えば実時間を取れる。
-
-https://github.com/tenntenn/isucontools/tree/master/cmd/measuregen
-
-を使うとソースコードを変更できる。
-
-```go
-func getReportMeasure(w http.ResponseWriter, r *http.Request) {
-	stats := measure.GetStats()
-	stats.SortDesc("sum")
-
-	fmt.Fprintf(w, "key\tcount\tsum\tmin\tmax\tavg\trate\tp95\n")
-
-	// print stats in TSV format
-	for _, s := range stats {
-		fmt.Fprintf(w, "%s\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
-			s.Key, s.Count, s.Sum, s.Min, s.Max, s.Avg, s.Rate, s.P95)
-	}
+func getProfileStop(w http.ResponseWriter, r *http.Request) {
+	profileProfile.Stop()
 }
 ```
 
-一度コピーしてエディタに貼り付けてからGoogle Docsに貼り付けるといい感じになる。
+`apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。LinuxのpprofファイルをMacで処理することもできる。
 
 ### Goでボトルネックになりやすいところ
 
@@ -577,6 +562,31 @@ profiling結果に`runtime.mallocgc`が多い場合はこういった小さい�
 Goの正規表現は基本遅い。リクエストの度に生成は絶対にしてはいけない。できれば`strings`パッケージの関数に置き換えられそうなら置き換えること。
 
   * [Remove regex match use Index and replace - walf443/yisucon_practice](https://github.com/walf443/yisucon_practice/pull/18/files)
+
+### measure
+
+https://github.com/najeira/measure を使えば各関数の実時間を取れる。
+
+https://github.com/tenntenn/isucontools/tree/master/cmd/measuregen
+
+を使うとソースコードを変更できる。`runtime.nanotime`と`runtime.walltime`を結構呼び出すので最後に消すのを忘れないこと。
+
+```go
+func getReportMeasure(w http.ResponseWriter, r *http.Request) {
+	stats := measure.GetStats()
+	stats.SortDesc("sum")
+
+	fmt.Fprintf(w, "key\tcount\tsum\tmin\tmax\tavg\trate\tp95\n")
+
+	// print stats in TSV format
+	for _, s := range stats {
+		fmt.Fprintf(w, "%s\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
+			s.Key, s.Count, s.Sum, s.Min, s.Max, s.Avg, s.Rate, s.P95)
+	}
+}
+```
+
+一度コピーしてエディタに貼り付けてからGoogle Docsに貼り付けるといい感じになる。
 
 #### net/http/pprof
 
