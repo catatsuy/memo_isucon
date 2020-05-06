@@ -400,14 +400,15 @@ dsn := fmt.Sprintf(
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
+maxConnsInt := 30
 if maxConns != "" {
-	i, err := strconv.Atoi(maxConns)
+	maxConnsInt, err = strconv.Atoi(maxConns)
 	if err != nil {
 		panic(err)
 	}
-	db.SetMaxOpenConns(i)
-	db.SetMaxIdleConns(i)
 }
+dbx.SetMaxOpenConns(maxConnsInt)
+dbx.SetMaxIdleConns(maxConnsInt)
 ```
 
 ### Goでプレースホルダ置換
