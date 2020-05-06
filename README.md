@@ -71,7 +71,7 @@ apt install percona-toolkit
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
 ```
-pt-query-digest --since="2020-05-02 09:00:00" /path/to/slow.log
+pt-query-digest --since="2020-05-02 09:00:00" /tmp/mysql-slow.log
 ```
 
 #### innodb buffer poolを温める
