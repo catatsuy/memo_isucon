@@ -192,7 +192,7 @@ set -x
 
 echo "start deploy ${USER}"
 GOOS=linux go build -v isucari
-for server in isu01; do
+for server in isu01 isu02; do
   ssh -t $server "sudo systemctl stop isucari.golang.service"
   scp ./isucari $server:/home/isucon/isucari/webapp/go/isucari
   rsync -vau ../sql/ $server:/home/isucon/isucari/webapp/sql/
@@ -349,8 +349,19 @@ import (
 	proxy "github.com/shogo82148/go-sql-proxy"
 )
 
-proxy.RegisterTracer()
-db, err = sql.Open("mysql:trace", dsn)
+var isDev bool
+if os.Getenv("DEV") == "1" {
+	isDev = true
+}
+
+var err error
+if isDev {
+	proxy.RegisterTracer()
+
+	db, err = sql.Open("mysql:trace", dsn)
+} else {
+	db, err = sql.Open("mysql", dsn)
+}
 ```
 
 デフォルトだとprepare statementを実行するので、そのタイミングで`ErrSkip`が発生して余計なログが出る。
@@ -385,7 +396,7 @@ dsn := fmt.Sprintf(
 
 ### GoでMySQLのコネクションを制限する
 
-デフォルトは無限なので制限した方が良い。
+デフォルトは無限なので制限した方が良い。30くらいから調整するのがよいかも。
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
@@ -416,6 +427,84 @@ dsn := fmt.Sprintf(
 	dbname,
 )
 ```
+
+### INクエリ
+
+  * IN句などで大量にプレースホルダを作ると、クエリの実行にかなり時間がかかるので避ける必要がある
+    * このケースだとスロークエリにならないのに、アプリケーション側からクエリを実行するのに時間がかかるという状況になるので注意
+    * 適切にエスケープした値を`strings.Join`で結合してSQLに渡すべき
+    * エスケープするよりも`[0-9a-zA-Z]`に限定する方を個人的には推奨
+
+```go
+idsStr := make([]string, 0, len(items))
+for _, i := range items {
+	idsStr = append(idsStr, strconv.FormatInt(i.ID, 10))
+}
+transactionEvidences := make([]TransactionEvidence, 0, len(items))
+err = dbx.Select(&transactionEvidences, "SELECT * FROM `transaction_evidences` WHERE `item_id` IN ("+strings.Join(idsStr, ",")+")")
+if err != nil {
+	log.Print(err)
+	outputErrorMsg(w, http.StatusInternalServerError, "db error")
+	return
+}
+transactionEvidenceMap := make(map[int64]TransactionEvidence)
+for _, t := range transactionEvidences {
+	transactionEvidenceMap[t.ItemID] = t
+}
+```
+
+### http.Clientについて
+
+  * `http.Client`を都度作成するのではなく、グローバル変数に持って使い回す
+    * 内部の`http.Transport`を使い回さないとTCPコネクションを都度貼ってしまう
+    * 複数のgoroutineから利用しても安全
+  * `http.Get`などは内部的にグローバル変数の`http.DefaultClient`を使い回す構成になっている
+    * 大量のリクエストを外部サービスに送らないなら`http.Get`のままが無難
+  * デフォルトだと同一ホストへのコネクション数は`http.DefaultMaxIdleConnsPerHost`の2に制限されている
+    * 他サービスに大量のリクエストを送る必要がある場合は大きくした方がよい
+    * `MaxIdleConns`(default: 100)と`IdleConnTimeout`(default: 90s)もいじった方が良い可能性がある
+    * 最適な値は問題や状況により異なる
+  * デフォルトだと`http.Client`の`Timeout`は無限になっているので、制限した方が安全
+    * いくつかタイムアウトの設定があるので適宜設定する
+  * レスポンスを受け取ったら必ずBodyをCloseする
+    * Closeを忘れるとTCPコネクションが再利用されない
+    * （ISUCONではあまりないと思うが）`res.Body`をReadせずにCloseするとコネクションが切断されるので、`ioutil.ReadAll`などを使って読み切る
+    * 本来はISUCONの初期実装で実装されているはずだが、初期実装がバグっている可能性もあるので確認すること
+
+``` go
+var (
+	IsuconClient http.Client
+)
+
+func init() {
+	IsuconClient = http.Client{
+		Timeout:   5 * time.Second,
+		Transport: &http.Transport{
+			MaxIdleConns:        500,
+			MaxIdleConnsPerHost: 200,
+			IdleConnTimeout:     120 * time.Second,
+		},
+	}
+}
+```
+
+``` go
+res, err := http.DefaultClient.Do(req)
+if err != nil {
+	return err
+}
+defer res.Body.Close()
+_, err = ioutil.ReadAll(res.Body)
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+参考URL
+
+  * [Goでnet/httpを使う時のこまごまとした注意 - Qiita](https://qiita.com/ono_matope/items/60e96c01b43c64ed1d18)
+  * [The complete guide to Go net/http timeouts](https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/)
+  * [Accelerating real applications in Go](https://talks.godoc.org/github.com/cubicdaiya/talks/2017/01/golang-tokyo.slide#16)
 
 ### Goアプリケーションの状況を見たい
 
@@ -563,6 +652,10 @@ git diff --no-prefix HEAD > ~/thisis.patch
 patch --dry-run -p0 < thisis.patch
 patch -p0 < thisis.patch
 ```
+
+## 参考URL
+
+* [GoでISUCONを戦う話](https://gist.github.com/catatsuy/e627aaf118fbe001f2e7c665fda48146)
 
 ## おまじない集
 
