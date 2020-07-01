@@ -396,7 +396,9 @@ dsn := fmt.Sprintf(
 
 ### GoでMySQLのコネクションを制限する
 
-デフォルトは無限なので制限した方が良い。30くらいから調整するのがよいかも。
+[DSAS開発者の部屋:Re: Configuring sql.DB for Better Performance](http://dsas.blog.klab.org/archives/2018-02/configure-sql-db.html)
+
+デフォルトは無限なので制限した方が良い。ISUCONだと30くらいから調整するのがよいかも。
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
