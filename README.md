@@ -56,6 +56,8 @@ FLUSH LOGS;
 SET GLOBAL slow_query_log = 0;
 ```
 
+`slow_query_log`はsessionで切り替えられないので、都度`SET long_query_time = 10.0`などを打つと都度切り替えられる。
+
 #### pt-query-digest
 
 [Download the Latest Percona Toolkit for Debian and RPM Packages](http://www.percona.com/downloads/percona-toolkit/LATEST/)
