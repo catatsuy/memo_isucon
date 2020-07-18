@@ -112,7 +112,7 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
 ## nginx
 
-```
+```sh
 cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+\.json","/users/\d+\.json","/transactions/\d+.png","/upload/[0-9a-f]+\.jpg" --sort=sum --reverse --filters 'Time > TimeAgo("5m")'
 ```
 
@@ -135,31 +135,37 @@ LimitNPROC=1006500
 
 ## gzip
 
-```
+```sh
 gzip -r js css
 gzip -k index.html
 ```
 
 ## netstat
 
-```
+```sh
 sudo netstat -tlnp
 sudo netstat -tnp | grep ESTABLISHED
 ```
 
 ## lsof
 
-```
+```sh
 sudo lsof -nP -i4TCP -sTCP:LISTEN
 sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
 ```
 
 ## git init
 
-``` shell
+```sh
 git init
 git config --global user.name "isucon"
 git config --global user.email "isucon@isucon"
+```
+
+```sh
+git init
+git config --global user.name "catatsuy"
+git config --global user.email "catatsuy@catatsuy.org"
 ```
 
 ## deploy
