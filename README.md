@@ -349,6 +349,69 @@ func (c *configCache) Get(key string) (string, bool) {
 var CacheConfig = NewConfigCache()
 ```
 
+### Goで簡易ジョブキュー
+
+```go
+type cacheLog struct {
+	// Setが多いならsync.Mutex
+	sync.Mutex
+	items  []isulogger.Log
+	logger *isulogger.Isulogger
+}
+
+func SetLogger(d QueryExecutor) error {
+	var err error
+	mCacheLog.logger, err = Logger(d)
+
+	return err
+}
+
+func SetDB(d QueryExecutor) {
+	var err error
+	mCacheLog.logger, err = Logger(d)
+	if err != nil {
+		log.Printf("[WARN] new logger failed. err:%s", err)
+		panic(err)
+	}
+
+	c := time.Tick(1 * time.Second)
+	go func() {
+		for {
+			ls := mCacheLog.Rotate()
+			err := mCacheLog.logger.SendBulk(ls)
+			if err != nil {
+				log.Printf("[WARN] logger send failed. err:%s", err)
+			}
+			<-c
+		}
+	}()
+}
+
+var mCacheLog = NewCacheLog()
+
+func NewCacheLog() *cacheLog {
+	m := make([]isulogger.Log, 0, 100)
+	c := &cacheLog{
+		items: m,
+	}
+	return c
+}
+
+func (c *cacheLog) Append(value isulogger.Log) {
+	c.Lock()
+	c.items = append(c.items, value)
+	c.Unlock()
+}
+
+func (c *cacheLog) Rotate() []isulogger.Log {
+	c.Lock()
+	tmp := c.items
+	c.items = make([]isulogger.Log, 0, 100)
+	c.Unlock()
+	return tmp
+}
+```
+
 ### Go側でSQLをtraceする
 
 ```go
