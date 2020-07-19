@@ -24,6 +24,14 @@ validate_password.length = 0
 validate_password.policy = LOW
 ```
 
+my.cnfの場所は以下のように調べる。
+
+```
+$ mysql --help | grep my.cnf
+                      order of preference, my.cnf, $MYSQL_TCP_PORT,
+/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
+```
+
 ### mysqldump
 
 ```
@@ -43,6 +51,8 @@ mysqldump -u root --compact --no-data database | grep -v "^SET" | grep -v "^/\*\
 
 ```
 SET GLOBAL slow_query_log = 1;
+# MySQL 8.0.14 above
+# SET GLOBAL log_slow_extra = 1;
 show variables like '%slow%';
 SET GLOBAL slow_query_log_file = '/tmp/mysql-slow.log';
 SET GLOBAL long_query_time = 0.0;
