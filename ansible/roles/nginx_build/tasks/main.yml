@@ -1,0 +1,18 @@
+- name: Download nginx-build
+  get_url:
+    url: https://github.com/cubicdaiya/nginx-build/releases/download/v{{ nginx_build_version }}/nginx-build-linux-amd64-{{ nginx_build_version }}.tar.gz
+    dest: /tmp/nginx-build-linux-amd64-{{ nginx_build_version }}.tar.gz
+
+- name: Extract nginx-build
+  unarchive:
+    src: /tmp/nginx-build-linux-amd64-{{ nginx_build_version }}.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Copy to /usr/local/bin/
+  become: yes
+  copy:
+    src: /tmp/nginx-build
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: 0755

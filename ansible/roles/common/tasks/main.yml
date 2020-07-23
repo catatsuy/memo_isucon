@@ -1,0 +1,17 @@
+- name: install dependencies
+  become: yes
+  apt:
+    name:
+      - build-essential
+      - vim-nox
+      - htop
+      - dstat
+      - tree
+      - zsh
+      - tmux
+
+- name: set editor vim
+  become: yes
+  alternatives:
+    name: editor
+    path: /usr/bin/vim.nox

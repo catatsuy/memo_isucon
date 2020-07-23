@@ -1,0 +1,24 @@
+- name: install unzip
+  become: yes
+  apt:
+    name:
+      - unzip
+
+- name: Download alp
+  get_url:
+    url: https://github.com//tkuchiki/alp/releases/download/v{{ alp_version }}/alp_linux_amd64.zip
+    dest: /tmp/alp_linux_amd64.zip
+
+- name: Extract alp
+  unarchive:
+    src: /tmp/alp_linux_amd64.zip
+    dest: /tmp/
+    remote_src: yes
+
+- name: Copy to /usr/local/bin/
+  become: yes
+  copy:
+    src: /tmp/alp
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: 0755

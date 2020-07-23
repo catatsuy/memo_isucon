@@ -1,0 +1,19 @@
+---
+- hosts: servers
+  gather_facts: false
+  roles:
+    - role: common
+      tags:
+        - common
+
+    - role: notify_slack
+      tags:
+        - notify_slack
+
+    - role: nginx_build
+      tags:
+        - nginx_build
+
+    - role: alp
+      tags:
+        - alp

@@ -1,0 +1,24 @@
+- name: Download notify_slack
+  get_url:
+    url: https://github.com/catatsuy/notify_slack/releases/download/v0.4.6/notify_slack-linux-amd64.tar.gz
+    dest: /tmp/notify_slack-linux-amd64.tar.gz
+
+- name: Extract notify_slack
+  unarchive:
+    src: /tmp/notify_slack-linux-amd64.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Copy to /usr/local/bin/
+  become: yes
+  copy:
+    src: /tmp/notify_slack
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: 0755
+
+- name: Put /etc/notify_slack.toml
+  become: yes
+  template:
+    src: etc/notify_slack.toml.j2
+    dest: /etc/notify_slack.toml
