@@ -142,6 +142,26 @@ https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 
 キャッシュがHITしているか確認したい場合はログに `"\tcache_status:$upstream_cache_status"` を追加
 
+### nginx-build
+
+```
+./nginx-build -d work -openssl -pcre -zlib \
+ --sbin-path=/usr/sbin/nginx \
+ --conf-path=/etc/nginx/nginx.conf \
+ --http-log-path=/var/log/nginx/access.log \
+ --error-log-path=/var/log/nginx/error.log \
+ --pid-path=/run/nginx.pid \
+ --lock-path=/var/lock/nginx.lock \
+ --http-client-body-temp-path=/var/lib/nginx/body \
+ --http-proxy-temp-path=/var/lib/nginx/proxy \
+ --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+ --with-debug \
+ --with-pcre-jit \
+ --with-http_gunzip_module \
+ --with-http_gzip_static_module \
+ --with-http_v2_module \
+ --with-http_dav_module
+```
 
 ## ulimit
 
