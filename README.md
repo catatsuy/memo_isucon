@@ -32,6 +32,8 @@ $ mysql --help | grep my.cnf
 /etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
 ```
 
+Ubuntuなら`/etc/mysql/debian.cnf`にパスワードがある。
+
 ### mysqldump
 
 ```
@@ -42,7 +44,7 @@ mysql -uroot データベース名 < dump.sql
 スキーマだけを得たい場合
 
 ```
-mysqldump -u root --compact --no-data database | grep -v "^SET" | grep -v "^/\*\!" | perl -ple 's@CREATE TABLE @\nCREATE TABLE @g'
+mysqldump -u root --compact --no-data データベース名 | grep -v "^SET" | grep -v "^/\*\!" | perl -ple 's@CREATE TABLE @\nCREATE TABLE @g'
 ```
 
 ### Slow Query
@@ -103,6 +105,14 @@ mysql-warmup mydatabase -h db.example.com -u dbuser -p --dry-run
 
 また時間制限もあるのでどれを実行するかは人間が決めるべき。
 
+### MySQL 8
+
+https://dev.mysql.com/downloads/
+
+```
+[mysqld]
+default-authentication-plugin = mysql_native_password
+```
 
 ## tmpfs
 
@@ -116,7 +126,7 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
 ## sysctl.conf
 
-`sysctl -p` で適用
+`sysctl -p` で適用。もしくは `sudo service procps restart`。
 
   * cannot assign requested はローカルポート
   * ip_conntrack: table full, dropping packet (`dmesg`)
@@ -144,6 +154,13 @@ LimitNPROC=1006500
 ```
 
 `too many open files` はファイルディスクリプタ
+
+## AppArmor
+
+```
+sudo systemctl stop apparmor
+sudo systemctl disable apparmor
+```
 
 ## gzip
 
