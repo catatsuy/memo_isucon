@@ -9,6 +9,28 @@ curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh |
 wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
 ```
 
+## 作業リスト
+
+```
+* ポータルサイトにログインしてsshできることを確認
+* 全メンバーのssh鍵を登録する
+* 何もせずにベンチマークを流す
+* 動作しているプロセスを確認しておおよその構成を理解する
+* Go実装に切り替えてベンチマークを流す
+* 全員共通の~/.ssh/configを作る
+* GitHubに手軽にpushできるように、deploy keyをサーバー上のisuconユーザーに入れておく
+* コードをリポジトリにpushする
+* 必要なパッケージなどインストール
+* データベースなど各アプリケーションの設定値を確認してgitにコミットする
+* nginxで計測できるようにする（alpを使う）
+* ハードウェアの構成を調べる
+* MySQL・画像などのバックアップを開発環境用に作成
+* スキーマ一覧を共有
+* ローカルで開発環境を作れないか考えて、作れそうなら作る
+* デプロイスクリプトを作る
+* キーになる関数があれば特定する
+```
+
 ## MySQL
 
 ```
