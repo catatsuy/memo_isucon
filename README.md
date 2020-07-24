@@ -12,9 +12,15 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 ## MySQL
 
 ```
-create database isucari;
-CREATE USER 'isucon'@'localhost' IDENTIFIED BY 'isucon';
-GRANT ALL PRIVILEGES ON isucari.* TO 'isucon'@'localhost';
+CREATE DATABASE `isucari`;
+
+DROP USER IF EXISTS 'isucari'@'localhost';
+CREATE USER 'isucari'@'localhost' IDENTIFIED BY 'isucari';
+GRANT ALL PRIVILEGES ON `isucari`.* TO 'isucari'@'localhost';
+
+DROP USER IF EXISTS 'isucari'@'%';
+CREATE USER 'isucari'@'%' IDENTIFIED BY 'isucari';
+GRANT ALL PRIVILEGES ON `isucari`.* TO 'isucari'@'%';
 ```
 
 MySQL8以降で簡単なパスワードを設定できなくなった。my.cnfで以下のようにする。
@@ -189,11 +195,11 @@ gzip -r js css
 gzip -k index.html
 ```
 
-## netstat
+## ss
 
 ```sh
-sudo netstat -tlnp
-sudo netstat -tnp | grep ESTABLISHED
+sudo ss -tlnp
+sudo ss -tnp | grep ESTABLISHED
 ```
 
 ## lsof
@@ -821,14 +827,6 @@ rsync -vau /hoge/fuga/ catatsuy.org:/hoge/fuga/
 ```
 
 ディレクトリの最後には必ず `/` を付ける
-
-### netstat
-
-```
-netstat -tlnp
-```
-
-tcp の通信だけ見れる
 
 ### 参考 URL
 
