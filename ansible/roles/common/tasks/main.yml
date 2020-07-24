@@ -9,6 +9,7 @@
       - tree
       - zsh
       - tmux
+      - lsof
 
 - name: set editor vim
   become: yes
