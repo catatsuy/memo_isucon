@@ -15,7 +15,7 @@
     src: /tmp/notify_slack
     dest: /usr/local/bin/
     remote_src: yes
-    mode: 0755
+    mode: "0755"
 
 - name: Put /etc/notify_slack.toml
   become: yes

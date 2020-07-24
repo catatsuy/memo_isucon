@@ -21,4 +21,4 @@
     src: /tmp/alp
     dest: /usr/local/bin/
     remote_src: yes
-    mode: 0755
+    mode: "0755"
