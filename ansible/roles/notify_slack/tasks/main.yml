@@ -1,6 +1,6 @@
 - name: Download notify_slack
   get_url:
-    url: https://github.com/catatsuy/notify_slack/releases/download/v0.4.6/notify_slack-linux-amd64.tar.gz
+    url: https://github.com/catatsuy/notify_slack/releases/download/v{{ notify_slack_version }}/notify_slack-linux-amd64.tar.gz
     dest: /tmp/notify_slack-linux-amd64.tar.gz
 
 - name: Extract notify_slack
