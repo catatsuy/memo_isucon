@@ -115,23 +115,6 @@ apt install percona-toolkit
 pt-query-digest --since="2020-05-02 09:00:00" /tmp/mysql-slow.log
 ```
 
-#### innodb buffer poolを温める
-
-  * [お手軽InnoDBウォームアップを実現するMySQL::Warmerの話をGotanda.pm #2でしてきました | おそらくはそれさえも平凡な日々](http://www.songmu.jp/riji/entry/2014-09-22-gotandapm-mysql-warmer.html)
-  * [Kazuho@Cybozu Labs: MySQL のウォームアップ (InnoDB編)](http://labs.cybozu.co.jp/blog/kazuho/archives/2007/10/innodb_warmup.php)
-  * [日々の覚書: InnoDB buffer pool dumpで遊ぶ](http://yoku0825.blogspot.jp/2012/08/innodb-buffer-pool-dump.html)
-  * [InnoDBのウォームアップに別サーバでdumpしたib_buffer_poolを使ってみる - mikedaの日記](http://mikeda.hatenablog.com/entry/2015/09/21/142746)
-
-```
-cpanm MySQL::Warmer
-cpanm DBD::mysql
-mysql-warmup mydatabase -h db.example.com -u dbuser -p --dry-run
-```
-
-`--dry-run`で実行すべきクエリを取得できる。`--dry-run`を付けなければ実行してくれるが、自分の環境では実行できないクエリを実行しようとした。
-
-また時間制限もあるのでどれを実行するかは人間が決めるべき。
-
 ### MySQL 8
 
 https://dev.mysql.com/downloads/
@@ -172,7 +155,7 @@ https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 ### nginx-build
 
 ```
-./nginx-build -d work -openssl -pcre -zlib \
+nginx-build -d work -openssl -pcre -zlib \
  --sbin-path=/usr/sbin/nginx \
  --conf-path=/etc/nginx/nginx.conf \
  --http-log-path=/var/log/nginx/access.log \
@@ -252,6 +235,18 @@ git config --global user.email "catatsuy@catatsuy.org"
 Host isu01
   HostName xxx
   User isucon
+  Port 22
+  IdentityFile ~/.ssh/id_rsa.github
+  ForwardAgent yes
+
+Host isu02
+  HostName yyy
+  User isucon
+  Port 22
+  ProxyCommand ssh isu01 nc %h %p
+  ForwardAgent yes
+
+Host *
   ServerAliveInterval 5
   ServerAliveCountMax 12
 ```
@@ -654,10 +649,6 @@ if err != nil {
   * [The complete guide to Go net/http timeouts](https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/)
   * [Accelerating real applications in Go](https://talks.godoc.org/github.com/cubicdaiya/talks/2017/01/golang-tokyo.slide#16)
 
-### Goアプリケーションの状況を見たい
-
-  * [golang-stats-api-handler/handler.go at master · fukata/golang-stats-api-handler](https://github.com/fukata/golang-stats-api-handler/blob/master/handler.go)
-
 ### Goアプリケーションのプロファイリング
 
 #### pprof
@@ -829,7 +820,7 @@ patch -p0 < thisis.patch
 
 ## 参考URL
 
-* [GoでISUCONを戦う話](https://gist.github.com/catatsuy/e627aaf118fbe001f2e7c665fda48146)
+  * [GoでISUCONを戦う話](https://gist.github.com/catatsuy/e627aaf118fbe001f2e7c665fda48146)
 
 ## おまじない集
 
