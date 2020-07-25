@@ -42,6 +42,8 @@ GRANT ALL PRIVILEGES ON `isucari`.* TO 'isucari'@'localhost';
 DROP USER IF EXISTS 'isucari'@'%';
 CREATE USER 'isucari'@'%' IDENTIFIED BY 'isucari';
 GRANT ALL PRIVILEGES ON `isucari`.* TO 'isucari'@'%';
+
+CREATE USER 'isucari'@'localhost' IDENTIFIED WITH mysql_native_password BY 'isucari';
 ```
 
 MySQL8以降で簡単なパスワードを設定できなくなった。my.cnfで以下のようにする。
