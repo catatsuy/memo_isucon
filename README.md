@@ -15,8 +15,8 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] ポータルサイトにログインしてsshできることを確認
 * [ ] 何もせずにベンチマークを流す
 * [ ] 動作しているプロセスを確認しておおよその構成を理解する
-* [ ] Go実装に切り替えてベンチマークを流す
 * [ ] GitHubに手軽にpushできるように、deploy keyをサーバー上のisuconユーザーに入れておく
+* [ ] Go実装に切り替えてベンチマークを流す
 * [ ] コードをリポジトリにpushする
 * [ ] 全員共通の~/.ssh/configを作る
 * [ ] 必要なパッケージなどインストール
