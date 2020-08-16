@@ -5,6 +5,7 @@
     - role: common
       tags:
         - common
+        - ubuntu
 
     # ssh -T git@github.com
     - role: put_sshkey

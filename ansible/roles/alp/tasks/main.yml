@@ -3,6 +3,8 @@
   apt:
     name:
       - unzip
+  tags:
+    - ubuntu
 
 - name: Download alp
   get_url:
