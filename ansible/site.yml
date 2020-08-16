@@ -6,6 +6,11 @@
       tags:
         - common
 
+    # ssh -T git@github.com
+    - role: put_sshkey
+      tags:
+        - put_sshkey
+
     - role: notify_slack
       tags:
         - notify_slack
