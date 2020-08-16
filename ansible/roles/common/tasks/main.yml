@@ -1,3 +1,8 @@
+- name: apt update
+  become: yes
+  apt:
+    update_cache: yes
+
 - name: install dependencies
   become: yes
   apt:
@@ -15,4 +20,4 @@
   become: yes
   alternatives:
     name: editor
-    path: /usr/bin/vim.nox
+    path: /usr/bin/vim
