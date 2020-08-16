@@ -290,19 +290,12 @@ echo "finish deploy ${USER}"
 ```go
 var hport int
 
-func init() {
-	flag.IntVar(&hport, "port", 0, "port to listen")
-	flag.Parse()
-}
-
-// 以下は main() で
-sigchan := make(chan os.Signal)
-signal.Notify(sigchan, syscall.SIGTERM)
-signal.Notify(sigchan, syscall.SIGINT)
+flag.IntVar(&hport, "port", 0, "port to listen")
+flag.Parse()
 
 var li net.Listener
 var herr error
-hsock := "/dev/shm/server.sock"
+hsock := "server.sock"
 if hport == 0 {
 	ferr := os.Remove(hsock)
 	if ferr != nil {
@@ -321,12 +314,13 @@ if hport == 0 {
 if herr != nil {
 	panic(herr)
 }
-go func() {
-	// func Serve(l net.Listener, handler Handler) error
-	log.Println(http.Serve(li, nil))
-}()
 
-<-sigchan
+// func Serve(l net.Listener, handler Handler) error
+log.Println(http.Serve(li, nil))
+```
+
+```shell
+curl --unix-socket server.sock http:/
 ```
 
 ### Goでインメモリキャッシュ
