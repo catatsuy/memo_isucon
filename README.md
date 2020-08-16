@@ -61,7 +61,7 @@ $ mysql --help | grep my.cnf
 /etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
 ```
 
-Ubuntuなら`/etc/mysql/debian.cnf`にパスワードがある。
+Ubuntuなら`/etc/mysql/debian.cnf`にパスワードがある。`/var/log/mysqld.log`をgrepする手もある。
 
 ### mysqldump
 
