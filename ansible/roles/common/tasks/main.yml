@@ -15,6 +15,7 @@
       - zsh
       - tmux
       - lsof
+      - percona-toolkit
 
 - name: set editor vim
   become: yes
