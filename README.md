@@ -237,6 +237,16 @@ sudo systemctl stop netdata
 sudo systemctl disable netdata
 ```
 
+## htop
+
+| key | effect |
+|:---:|:---:|
+|  H  |  ユーザースレッド表示・非表示  |
+|  K  |  カーネルスレッド表示・非表示  |
+|  t  |  ツリー表示  |
+|  h  |  help |
+|  q  |  quit |
+
 ## gzip
 
 ```sh
