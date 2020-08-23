@@ -204,11 +204,21 @@ LimitNPROC=1006500
 
 `too many open files` はファイルディスクリプタ
 
-## AppArmor
+## Ubuntu
+
+### AppArmor
 
 ```
 sudo systemctl stop apparmor
 sudo systemctl disable apparmor
+```
+
+### update-notifier
+
+update-notifierがメモリを食い潰すことがある。
+
+```
+sudo apt purge update-notifier-common
 ```
 
 ## gzip
