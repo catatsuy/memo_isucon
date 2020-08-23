@@ -725,27 +725,14 @@ https://github.com/tenntenn/isucontools/tree/master/cmd/measuregen
 を使うとソースコードを変更できる。`runtime.nanotime`と`runtime.walltime`を結構呼び出すので最後に消すのを忘れないこと。
 
 ```go
-func getReportMeasure(w http.ResponseWriter, r *http.Request) {
-	stats := measure.GetStats()
-	stats.SortDesc("sum")
-
-	fmt.Fprintf(w, "key\tcount\tsum\tmin\tmax\tavg\trate\tp95\n")
-
-	// print stats in TSV format
-	for _, s := range stats {
-		fmt.Fprintf(w, "%s\t%d\t%f\t%f\t%f\t%f\t%f\t%f\n",
-			s.Key, s.Count, s.Sum, s.Min, s.Max, s.Avg, s.Rate, s.P95)
-	}
-}
+s.mux.HandleFunc("/debug/measure", measure.HandleStats)
 ```
 
-一度コピーしてエディタに貼り付けてからGoogle Spreadsheetに貼り付けるといい感じになる。curlとpbcopyでも可。
+CSVとして保存して表計算ソフトで開く。
 
 ```
-curl http://localhost/report_measure | pbcopy
+curl http://localhost:8000/debug/measure -o measure.csv
 ```
-
-して貼り付け。Google Spreadsheetは複数行を選択すると複数行を一気に上に挿入できる。
 
 #### net/http/pprof
 
