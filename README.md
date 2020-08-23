@@ -221,6 +221,22 @@ update-notifierがメモリを食い潰すことがある。
 sudo apt purge update-notifier-common
 ```
 
+## netdata
+
+分解能1秒・設定不要・省メモリ・1時間分のデータ保持・台数制限なしのクラウドサービスあり
+
+```
+# install
+bash <(curl -Ss https://my-netdata.io/kickstart.sh)
+
+# set netdata.cloud (Add nodes to General)
+sudo netdata-claim.sh -token=aaaaaa -rooms=bbbbb -url=https://app.netdata.cloud
+
+# stop
+sudo systemctl stop netdata
+sudo systemctl disable netdata
+```
+
 ## gzip
 
 ```sh
