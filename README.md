@@ -25,6 +25,7 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] ハードウェアの構成を調べる
 * [ ] MySQL・画像などのバックアップを開発環境用に作成
 * [ ] スキーマ一覧を共有
+* [ ] 各テーブルのサイズを共有
 * [ ] ローカルで開発環境を作れないか考えて、作れそうなら作る
 * [ ] デプロイスクリプトを作る
 * [ ] キーになる関数があれば特定する
@@ -74,6 +75,22 @@ mysql -uroot データベース名 < dump.sql
 
 ```
 mysqldump -u root --compact --no-data データベース名 | grep -v "^SET" | grep -v "^/\*\!" | perl -ple 's@CREATE TABLE @\nCREATE TABLE @g'
+```
+
+テーブルのサイズを得る
+
+```sql
+SELECT
+  table_name, engine, table_rows,
+  floor((data_length+index_length)/1024/1024) AS total_mb,
+  floor((data_length)/1024/1024) AS data_mb,
+  floor((index_length)/1024/1024) AS index_mb
+FROM
+  information_schema.tables
+WHERE
+  table_schema=database()
+ORDER BY
+  (data_length+index_length) DESC;
 ```
 
 ### Slow Query
