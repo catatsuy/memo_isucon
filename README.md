@@ -563,7 +563,8 @@ if maxConns != "" {
 	}
 }
 dbx.SetMaxOpenConns(maxConnsInt)
-dbx.SetMaxIdleConns(maxConnsInt)
+dbx.SetMaxIdleConns(maxConnsInt*2)
+dbx.SetConnMaxLifetime(time.Minute * 2)
 ```
 
 ### Goでプレースホルダ置換
@@ -575,7 +576,7 @@ dbx.SetMaxIdleConns(maxConnsInt)
 ```go
 // tcp
 dsn := fmt.Sprintf(
-	"%s:%s@tcp(%s:%s)/%s?interpolateParams=true&charset=utf8mb4&parseTime=true&loc=Local",
+	"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local&interpolateParams=true",
 	user,
 	password,
 	host,
