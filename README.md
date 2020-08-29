@@ -131,8 +131,10 @@ apt install percona-toolkit
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
 ```
-pt-query-digest --since="2020-05-02 09:00:00" /tmp/mysql-slow.log
+pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /tmp/mysql-slow.log | tee slowq.txt
 ```
+
+`--since="5m"` みたいな設定もできるが、MySQLのタイムゾーンとOSのタイムゾーンが異なっている場合、pt-query-digest上ではOSのタイムゾーンが使われる。UTCを使いたい場合はdateコマンドを使った方が楽。
 
 ### MySQL 8
 
