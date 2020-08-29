@@ -114,7 +114,7 @@ FLUSH LOGS;
 SET GLOBAL slow_query_log = 0;
 ```
 
-`slow_query_log`はsessionで切り替えられないので、都度`SET long_query_time = 10.0`などを打つと都度切り替えられる。
+`slow_query_log`はsessionで切り替えられないので、都度無効にする場合はsession毎に`SET long_query_time = 60.0`を実行する。
 
 #### pt-query-digest
 
@@ -164,7 +164,9 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 ## nginx
 
 ```sh
-cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+\.json","/users/\d+\.json","/transactions/\d+.png","/upload/[0-9a-f]+\.jpg" --sort=sum --reverse --filters 'Time > TimeAgo("5m")'
+cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json" --sort=sum --reverse --filters 'Time > TimeAgo("5m")'
+
+cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+\.json","/users/\d+\.json","/transactions/\d+.png","/upload/[0-9a-f]+\.jpg" --sort=sum --reverse --filters 'Time > TimeAgo("5m")' | notify_slack -snippet -filetype txt
 ```
 
 https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
