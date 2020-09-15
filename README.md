@@ -28,7 +28,9 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] 各テーブルのサイズを共有
 * [ ] ローカルで開発環境を作れないか考えて、作れそうなら作る
 * [ ] デプロイスクリプトを作る
+* [ ] initialize の動作を確認する
 * [ ] キーになる関数があれば特定する
+* [ ] netdata導入
 ```
 
 ## MySQL
