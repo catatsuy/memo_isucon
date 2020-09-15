@@ -104,7 +104,7 @@ SET GLOBAL slow_query_log = 1;
 # MySQL 8.0.14 above
 # SET GLOBAL log_slow_extra = 1;
 show variables like '%slow%';
-SET GLOBAL slow_query_log_file = '/tmp/mysql-slow.log';
+SET GLOBAL slow_query_log_file = '/var/lib/mysql/slow.log';
 SET GLOBAL long_query_time = 0.0;
 show variables like 'long%';
 FLUSH LOGS;
@@ -133,7 +133,7 @@ apt install percona-toolkit
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
 ```
-pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /tmp/mysql-slow.log | tee slowq.txt
+pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /var/lib/mysql/slow.log | tee slowq.txt
 ```
 
 `--since="5m"` みたいな設定もできるが、MySQLのタイムゾーンとOSのタイムゾーンが異なっている場合、pt-query-digest上ではOSのタイムゾーンが使われる。UTCを使いたい場合はdateコマンドを使った方が楽。
