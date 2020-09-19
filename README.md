@@ -66,6 +66,8 @@ $ mysql --help | grep my.cnf
 
 Ubuntuなら`/etc/mysql/debian.cnf`にパスワードがある。`/var/log/mysqld.log`をgrepする手もある。
 
+`/etc/mysql/debian.cnf`を`$HOME/.my.cnf`にコピーすればパスワードをなしにアクセスできる。
+
 ### mysqldump
 
 ```
@@ -157,9 +159,17 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 
 `sudo mount -a`で適用
 
+## ダミーファイル作成
+
+50MBの`/dummy`を作る。
+
+```
+sudo dd if=/dev/zero of=/dummy bs=1M count=50
+```
+
 ## sysctl.conf
 
-`sysctl -p` で適用。もしくは `sudo service procps restart`。
+`sysctl -p` で適用。もしくは `sudo service procps reload`。
 
   * cannot assign requested はローカルポート
   * ip_conntrack: table full, dropping packet (`dmesg`)
@@ -329,7 +339,7 @@ set -x
 set -x
 
 echo "start deploy ${USER}"
-GOOS=linux go build -v isucari
+GOOS=linux go build -o isucari
 for server in isu01 isu02; do
   ssh -t $server "sudo systemctl stop isucari.golang.service"
   scp ./isucari $server:/home/isucon/isucari/webapp/go/isucari
