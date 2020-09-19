@@ -546,6 +546,21 @@ func (c *cacheLog) Rotate() []isulogger.Log {
 }
 ```
 
+### GoでMySQLの起動を待つ
+
+```go
+	// db.Open() が成功した直後にこれを入れる.
+	for {
+		err := db.Ping()
+		if err == nil {
+			break
+		}
+		log.Print(err)
+		time.Sleep(time.Second * 2)
+	}
+	log.Print("DB ready!")
+```
+
 ### Go側でSQLをtraceする
 
 ```go
