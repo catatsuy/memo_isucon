@@ -68,6 +68,15 @@ Ubuntuなら`/etc/mysql/debian.cnf`にパスワードがある。`/var/log/mysql
 
 `/etc/mysql/debian.cnf`を`$HOME/.my.cnf`にコピーすればパスワードをなしにアクセスできる。
 
+日本語が入力できない場合は以下の設定をコメントアウトすると直るかも。
+
+```
+[mysql]
+default-character-set=utf8mb4
+[client]
+default-character-set=utf8mb4
+```
+
 ### mysqldump
 
 ```
