@@ -59,3 +59,27 @@ func main() {
 ```
 
 `go generate`すれば`*.ego.go`が出力される。
+
+## INクエリ
+
+  * 以前はIN句などで大量にプレースホルダを作ると、クエリの実行にかなり時間がかかる問題があったが、現在のGoのライブラリにはない
+    * このケースだとスロークエリにならないのに、アプリケーション側からクエリを実行するのに時間がかかるという状況になるので注意
+    * 古いバージョンを使う場合や、PHPなど他言語を使う場合は注意
+
+```go
+idsStr := make([]string, 0, len(items))
+for _, i := range items {
+	idsStr = append(idsStr, strconv.FormatInt(i.ID, 10))
+}
+transactionEvidences := make([]TransactionEvidence, 0, len(items))
+err = dbx.Select(&transactionEvidences, "SELECT * FROM `transaction_evidences` WHERE `item_id` IN ("+strings.Join(idsStr, ",")+")")
+if err != nil {
+	log.Print(err)
+	outputErrorMsg(w, http.StatusInternalServerError, "db error")
+	return
+}
+transactionEvidenceMap := make(map[int64]TransactionEvidence)
+for _, t := range transactionEvidences {
+	transactionEvidenceMap[t.ItemID] = t
+}
+```

@@ -661,31 +661,6 @@ dsn := fmt.Sprintf(
 )
 ```
 
-### INクエリ
-
-  * IN句などで大量にプレースホルダを作ると、クエリの実行にかなり時間がかかるので避ける必要がある
-    * このケースだとスロークエリにならないのに、アプリケーション側からクエリを実行するのに時間がかかるという状況になるので注意
-    * 適切にエスケープした値を`strings.Join`で結合してSQLに渡すべき
-    * エスケープするよりも`[0-9a-zA-Z]`に限定する方を個人的には推奨
-
-```go
-idsStr := make([]string, 0, len(items))
-for _, i := range items {
-	idsStr = append(idsStr, strconv.FormatInt(i.ID, 10))
-}
-transactionEvidences := make([]TransactionEvidence, 0, len(items))
-err = dbx.Select(&transactionEvidences, "SELECT * FROM `transaction_evidences` WHERE `item_id` IN ("+strings.Join(idsStr, ",")+")")
-if err != nil {
-	log.Print(err)
-	outputErrorMsg(w, http.StatusInternalServerError, "db error")
-	return
-}
-transactionEvidenceMap := make(map[int64]TransactionEvidence)
-for _, t := range transactionEvidences {
-	transactionEvidenceMap[t.ItemID] = t
-}
-```
-
 ### http.Clientについて
 
   * `http.Client`を都度作成するのではなく、グローバル変数に持って使い回す
