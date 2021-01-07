@@ -625,7 +625,8 @@ dsn := fmt.Sprintf(
 
 ### GoでMySQLのコネクションを制限する
 
-[DSAS開発者の部屋:Re: Configuring sql.DB for Better Performance](http://dsas.blog.klab.org/archives/2018-02/configure-sql-db.html)
+* [DSAS開発者の部屋:Re: Configuring sql.DB for Better Performance](http://dsas.blog.klab.org/archives/2018-02/configure-sql-db.html)
+* [Three bugs in the Go MySQL Driver - The GitHub Blog](https://github.blog/2020-05-20-three-bugs-in-the-go-mysql-driver/)
 
 デフォルトは無限なので制限した方が良い。ISUCONだと30くらいから調整するのがよいかも。
 
@@ -640,8 +641,14 @@ if maxConns != "" {
 }
 dbx.SetMaxOpenConns(maxConnsInt)
 dbx.SetMaxIdleConns(maxConnsInt*2)
-dbx.SetConnMaxLifetime(time.Minute * 2)
+// dbx.SetConnMaxLifetime(time.Minute * 2)
+dbx.SetConnMaxIdleTime(time.Minute * 2)
 ```
+
+`db.SetConnMaxIdleTime`を使えば、idleになったコネクションをいい感じに掃除してもらえる。
+
+cf: https://github.com/go-sql-driver/mysql#important-settings
+
 
 ### Goでプレースホルダ置換
 
