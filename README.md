@@ -626,14 +626,14 @@ dsn := fmt.Sprintf(
 ### GoでMySQLのコネクションを制限する
 
 * `db.SetMaxOpenConns`はデフォルト無限なので制限する必要がある
-  * ISUCONだと30くらいから調整するのがよいかも
+  * ISUCONだと25くらいから調整するのがよいかも
   * `db.SetMaxIdleConns`は同じか、少し大きくすればよい
 * `db.SetConnMaxIdleTime`を使えば、idleになったコネクションをいい感じに掃除してもらえる
   * cf: https://github.com/go-sql-driver/mysql#important-settings
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
-maxConnsInt := 30
+maxConnsInt := 25
 if maxConns != "" {
 	maxConnsInt, err = strconv.Atoi(maxConns)
 	if err != nil {
