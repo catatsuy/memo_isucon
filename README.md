@@ -614,9 +614,9 @@ dsn := fmt.Sprintf(
   * ISUCONだと25くらいから調整するのがよいかも
   * `db.SetMaxIdleConns`は同じか、少し大きくすればよい
 * `db.SetConnMaxIdleTime`を使えば、idleになったコネクションをいい感じに掃除してもらえる
-  * cf: https://github.com/go-sql-driver/mysql#important-settings
+  * https://github.com/go-sql-driver/mysql#important-settings
 * 再起動試験対策で実際に接続に成功するまでfor文で待つようにすると安心
-  * cf: https://zenn.dev/methane/articles/020f037513cd6b701aee
+  * [アプリ起動時にDB起動を待つ](https://zenn.dev/methane/articles/020f037513cd6b701aee)
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
