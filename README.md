@@ -555,21 +555,6 @@ func (c *cacheLog) Rotate() []isulogger.Log {
 }
 ```
 
-### GoでMySQLの起動を待つ
-
-```go
-	// db.Open() が成功した直後にこれを入れる.
-	for {
-		err := db.Ping()
-		if err == nil {
-			break
-		}
-		log.Print(err)
-		time.Sleep(time.Second * 2)
-	}
-	log.Print("DB ready!")
-```
-
 ### Go側でSQLをtraceする
 
 ```go
@@ -623,13 +608,15 @@ dsn := fmt.Sprintf(
 )
 ```
 
-### GoでMySQLのコネクションを制限する
+### GoでMySQLのコネクションを管理する
 
 * `db.SetMaxOpenConns`はデフォルト無限なので制限する必要がある
   * ISUCONだと25くらいから調整するのがよいかも
   * `db.SetMaxIdleConns`は同じか、少し大きくすればよい
 * `db.SetConnMaxIdleTime`を使えば、idleになったコネクションをいい感じに掃除してもらえる
   * cf: https://github.com/go-sql-driver/mysql#important-settings
+* 再起動試験対策で実際に接続に成功するまでfor文で待つようにすると安心
+  * cf: https://zenn.dev/methane/articles/020f037513cd6b701aee
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
@@ -645,7 +632,6 @@ db.SetMaxIdleConns(maxConnsInt*2)
 // db.SetConnMaxLifetime(time.Minute * 2)
 db.SetConnMaxIdleTime(time.Minute * 2)
 
-// cf: https://zenn.dev/methane/articles/020f037513cd6b701aee
 for {
 	err := db.Ping()
 	// _, err := db.Exec("SELECT 42")
