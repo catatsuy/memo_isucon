@@ -625,10 +625,11 @@ dsn := fmt.Sprintf(
 
 ### GoでMySQLのコネクションを制限する
 
-* [DSAS開発者の部屋:Re: Configuring sql.DB for Better Performance](http://dsas.blog.klab.org/archives/2018-02/configure-sql-db.html)
-* [Three bugs in the Go MySQL Driver - The GitHub Blog](https://github.blog/2020-05-20-three-bugs-in-the-go-mysql-driver/)
-
-デフォルトは無限なので制限した方が良い。ISUCONだと30くらいから調整するのがよいかも。
+* `db.SetMaxOpenConns`はデフォルト無限なので制限する必要がある
+  * ISUCONだと30くらいから調整するのがよいかも
+  * `db.SetMaxIdleConns`は同じか、少し大きくすればよい
+* `db.SetConnMaxIdleTime`を使えば、idleになったコネクションをいい感じに掃除してもらえる
+  * cf: https://github.com/go-sql-driver/mysql#important-settings
 
 ``` go
 maxConns := os.Getenv("DB_MAXOPENCONNS")
@@ -639,16 +640,27 @@ if maxConns != "" {
 		panic(err)
 	}
 }
-dbx.SetMaxOpenConns(maxConnsInt)
-dbx.SetMaxIdleConns(maxConnsInt*2)
-// dbx.SetConnMaxLifetime(time.Minute * 2)
-dbx.SetConnMaxIdleTime(time.Minute * 2)
+db.SetMaxOpenConns(maxConnsInt)
+db.SetMaxIdleConns(maxConnsInt*2)
+// db.SetConnMaxLifetime(time.Minute * 2)
+db.SetConnMaxIdleTime(time.Minute * 2)
+
+// cf: https://zenn.dev/methane/articles/020f037513cd6b701aee
+for {
+	err := db.Ping()
+	// _, err := db.Exec("SELECT 42")
+	if err == nil {
+		break
+	}
+	log.Print(err)
+	time.Sleep(time.Second * 2)
+}
+log.Print("DB ready!")
 ```
 
-`db.SetConnMaxIdleTime`を使えば、idleになったコネクションをいい感じに掃除してもらえる。
-
-cf: https://github.com/go-sql-driver/mysql#important-settings
-
+* [DSAS開発者の部屋:Re: Configuring sql.DB for Better Performance](http://dsas.blog.klab.org/archives/2018-02/configure-sql-db.html)
+* [Three bugs in the Go MySQL Driver - The GitHub Blog](https://github.blog/2020-05-20-three-bugs-in-the-go-mysql-driver/)
+* [Go の sql.DB がコネクションプールを管理する仕組み - Please Sleep](https://please-sleep.cou929.nu/go-sql-db-connection-pool.html)
 
 ### Goでプレースホルダ置換
 
