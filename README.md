@@ -15,7 +15,7 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] ポータルサイトにログインしてsshできることを確認
 * [ ] 何もせずにベンチマークを流す
 * [ ] 動作しているプロセスを確認しておおよその構成を理解する
-* [ ] GitHubに手軽にpushできるように、deploy keyをサーバー上のisuconユーザーに入れておく
+* [ ] ssh-keygenして鍵をdeploy keyに登録 ssh -T git@github.com
 * [ ] Go実装に切り替えてベンチマークを流す
 * [ ] コードをリポジトリにpushする
 * [ ] 全員共通の~/.ssh/configを作る
@@ -252,7 +252,7 @@ sudo apt purge update-notifier-common
 
 ```
 # install
-bash <(curl -Ss https://my-netdata.io/kickstart.sh)
+bash <(curl -Ss https://my-netdata.io/kickstart.sh) --no-updates --stable-channel
 
 # set netdata.cloud (Add nodes to General)
 sudo netdata-claim.sh -token=aaaaaa -rooms=bbbbb -url=https://app.netdata.cloud
@@ -348,10 +348,10 @@ set -x
 set -x
 
 echo "start deploy ${USER}"
-GOOS=linux go build -o isucari
+GOOS=linux GOARCH=amd64 go build -o isucari_linux
 for server in isu01 isu02; do
   ssh -t $server "sudo systemctl stop isucari.golang.service"
-  scp ./isucari $server:/home/isucon/isucari/webapp/go/isucari
+  scp ./isucari_linux $server:/home/isucon/isucari/webapp/go/isucari
   rsync -vau ../sql/ $server:/home/isucon/isucari/webapp/sql/
   ssh -t $server "sudo systemctl start isucari.golang.service"
 done
