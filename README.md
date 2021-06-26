@@ -850,17 +850,7 @@ ISUCON5予選のようにリクエストの度に変わる関数を`template.Fun
 
 ### jsonが遅い場合
 
-https://github.com/json-iterator/go
-
-``` go
-import (
-	jsoniter "github.com/json-iterator/go"
-)
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
-```
-
-互換性はないが https://github.com/buger/jsonparser はもっと早い。
+https://github.com/goccy/go-json
 
 ### Goの書き方
 
