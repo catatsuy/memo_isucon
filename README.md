@@ -77,6 +77,14 @@ default-character-set=utf8mb4
 default-character-set=utf8mb4
 ```
 
+MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。なぜかmy.cnfでは無効にできないみたいなので `sudo systemctl status mysql` で設定ファイルを探して直接書き換える。
+
+```
+ExecStart=/usr/sbin/mysqld --disable-log-bin
+```
+
+`systemctl daemon-reload`を忘れないこと
+
 ### mysqldump
 
 ```
@@ -255,6 +263,8 @@ sudo systemctl stop snapd
 sudo systemctl disable snapd
 sudo systemctl stop snapd.socket
 sudo systemctl disable snapd.socket
+
+sudo systemctl disable snap.amazon-ssm-agent.amazon-ssm-agent.service
 ```
 
 ## netdata
