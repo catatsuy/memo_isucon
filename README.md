@@ -77,14 +77,6 @@ default-character-set=utf8mb4
 default-character-set=utf8mb4
 ```
 
-MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。なぜかmy.cnfでは無効にできないみたいなので `sudo systemctl status mysql` で設定ファイルを探して直接書き換える。
-
-```
-ExecStart=/usr/sbin/mysqld --disable-log-bin
-```
-
-`systemctl daemon-reload`を忘れないこと
-
 ### mysqldump
 
 ```
@@ -159,6 +151,14 @@ pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /var/log/mysql/s
 
 ### MySQL 8
 
+MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。なぜかmy.cnfでは無効にできないみたいなので `sudo systemctl status mysql` で設定ファイルを探して直接書き換える。
+
+```
+ExecStart=/usr/sbin/mysqld --disable-log-bin
+```
+
+`systemctl daemon-reload`を忘れないこと
+
 https://dev.mysql.com/downloads/
 
 ```
@@ -175,6 +175,20 @@ tmpfs  /mnt/tmpfs  tmpfs  defaults,size=8G  0  0
 ```
 
 `sudo mount -a`で適用
+
+## swap
+
+```sh
+sudo fallocate -l 512m /mnt/512MiB.swap
+sudo chmod 600 /mnt/512MiB.swap
+sudo mkswap /mnt/512MiB.swap
+sudo swapon /mnt/512MiB.swap
+
+# 再起動しても有効にしたい場合
+echo "\n/mnt/512MiB.swap  none  swap  sw  0 0" >> /etc/fstab
+```
+
+[SwapFaq - Community Help Wiki](https://help.ubuntu.com/community/SwapFaq)
 
 ## ダミーファイル作成
 
