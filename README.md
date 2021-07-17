@@ -604,6 +604,20 @@ if isDev {
 
 cf: https://github.com/DataDog/dd-trace-go/issues/270
 
+### GoでINに渡すPrepared Statementの?を生成する
+
+```go
+func InStatement(count int) string {
+	b := make([]byte, 0, count*2)
+	part := []byte{',', '?'}
+	for i := 0; i < count; i++ {
+		b = append(b, part...)
+	}
+
+	return string(b[1:])
+}
+```
+
 ### GoでMySQLの接続をUNIXドメインソケットにする
 
 https://github.com/go-sql-driver/mysql
