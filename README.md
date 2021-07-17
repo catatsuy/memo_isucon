@@ -246,6 +246,17 @@ update-notifierがメモリを食い潰すことがある。
 sudo apt purge update-notifier-common
 ```
 
+### snapd
+
+snapdがメモリを食い潰すことがある。
+
+```
+sudo systemctl stop snapd
+sudo systemctl disable snapd
+sudo systemctl stop snapd.socket
+sudo systemctl disable snapd.socket
+```
+
 ## netdata
 
 分解能1秒・設定不要・省メモリ・1時間分のデータ保持・台数制限なしのクラウドサービスあり
