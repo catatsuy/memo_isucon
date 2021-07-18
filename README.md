@@ -157,6 +157,12 @@ pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /var/log/mysql/s
 
 `--since="5m"` みたいな設定もできるが、MySQLのタイムゾーンとOSのタイムゾーンが異なっている場合、pt-query-digest上ではOSのタイムゾーンが使われる。UTCを使いたい場合はdateコマンドを使った方が楽。
 
+### binlog削除
+
+```
+PURGE BINARY LOGS BEFORE NOW()
+```
+
 ### MySQL 8
 
 MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。なぜかmy.cnfでは無効にできないみたいなので `sudo systemctl status mysql` で設定ファイルを探して直接書き換える。
