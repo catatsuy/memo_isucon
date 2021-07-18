@@ -636,13 +636,7 @@ cf: https://github.com/DataDog/dd-trace-go/issues/270
 
 ```go
 func InStatement(count int) string {
-	b := make([]byte, 0, count*2)
-	part := []byte{',', '?'}
-	for i := 0; i < count; i++ {
-		b = append(b, part...)
-	}
-
-	return string(b[1:])
+	return strings.Repeat(",?", count)[1:]
 }
 ```
 
