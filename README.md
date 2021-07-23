@@ -163,6 +163,10 @@ pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /var/log/mysql/s
 PURGE BINARY LOGS BEFORE NOW()
 ```
 
+```
+SHOW GLOBAL VARIABLES LIKE 'log_bin';
+```
+
 ### MySQL 8
 
 MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。なぜかmy.cnfでは無効にできないみたいなので `sudo systemctl status mysql` で設定ファイルを探して直接書き換える。
@@ -178,6 +182,18 @@ https://dev.mysql.com/downloads/
 ```
 [mysqld]
 default-authentication-plugin = mysql_native_password
+```
+
+### MySQL Trigger
+
+```
+alter table posts add column count_comment int NOT NULL default 0
+
+create trigger comment_insert_trigger before insert on comments for each row update posts set posts.count_comment = posts.count_comment + 1 where posts.id = NEW.post_id
+
+create trigger comment_delete_trigger before delete on comments for each row update posts set posts.count_comment = posts.count_comment - 1 where posts.id = OLD.post_id
+
+UPDATE posts, (select `post_id`,count(*) as `cnt` from `comments` group by `post_id`) as cc set posts.count_comment = cc.cnt where posts.id = cc.post_id
 ```
 
 ## tmpfs
@@ -354,6 +370,12 @@ git config --global user.email "isucon@isucon"
 git init
 git config --global user.name "catatsuy"
 git config --global user.email "catatsuy@catatsuy.org"
+```
+
+## ディスクが枯渇しそうなとき
+
+```sh
+sudo du -m --max-depth 2 / | sort -nr | head -10
 ```
 
 ## deploy
