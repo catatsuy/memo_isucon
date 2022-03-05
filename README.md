@@ -559,26 +559,25 @@ var mCacheInteger = NewCacheInteger[string, int64]()
 ### Goでexpire付きのインメモリキャッシュ
 
 ```go
-type configValue struct {
-	value  string
+type expiredValue[V any] struct {
+	value  V
 	expire time.Time
 }
 
-type configCache struct {
+type cacheExpired[K comparable, V any] struct {
 	sync.RWMutex
-	items map[string]configValue
+	items map[K]expiredValue[V]
 }
 
-func NewConfigCache() *configCache {
-	m := make(map[string]configValue)
-	c := &configCache{
-		items: m,
+func NewCacheExpired[K comparable, V any]() *cacheExpired[K, V] {
+	c := &cacheExpired[K, V]{
+		items: make(map[K]expiredValue[V]),
 	}
 	return c
 }
 
-func (c *configCache) Set(key string, value string) {
-	val := configValue{
+func (c *cacheExpired[K, V]) Set(key K, value V) {
+	val := expiredValue[V]{
 		value:  value,
 		expire: time.Now().Add(80 * time.Second),
 	}
@@ -587,20 +586,22 @@ func (c *configCache) Set(key string, value string) {
 	c.items[key] = val
 }
 
-func (c *configCache) Get(key string) (string, bool) {
+func (c *cacheExpired[K, V]) Get(key K) (V, bool) {
 	c.RLock()
 	defer c.RUnlock()
 	v, found := c.items[key]
 	if !found {
-		return "", false
+		var zero V
+		return zero, false
 	}
 	if time.Now().After(v.expire) {
-		return "", false
+		var zero V
+		return zero, false
 	}
 	return v.value, found
 }
 
-var CacheConfig = NewConfigCache()
+var mCacheExpired = NewCacheExpired[string, string]()
 ```
 
 ### Goで簡易ジョブキュー
