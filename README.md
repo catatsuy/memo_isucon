@@ -698,6 +698,11 @@ cf: https://github.com/DataDog/dd-trace-go/issues/270
 ### GoでINに渡すPrepared Statementの?を生成する
 
 ```go
+levels := []int{4, 6, 7}
+query, args, err := sqlx.In("SELECT * FROM users WHERE level IN (?);", levels)
+```
+
+```go
 func InStatement(count int) string {
 	return strings.Repeat(",?", count)[1:]
 }
@@ -718,6 +723,10 @@ dsn := fmt.Sprintf(
 	dbname,
 )
 
+cfg := mysql.NewConfig()
+cfg.Net = "tcp"
+cfg.Addr = "127.0.0.1:3306"
+
 // unix domain socket
 dsn := fmt.Sprintf(
 	"%s:%s@unix(%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
@@ -726,6 +735,9 @@ dsn := fmt.Sprintf(
 	socket,
 	dbname,
 )
+
+cfg.Net = "unix"
+cfg.Addr = "/tmp/mysql.sock"
 ```
 
 ### GoでMySQLのコネクションを管理する
