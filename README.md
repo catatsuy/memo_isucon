@@ -205,6 +205,7 @@ INSERT INTO playlist_favorite_count (`playlist_id`, `count`) SELECT `playlist_id
 ## docker compose
 
 ```sh
+docker compose build app
 docker compose logs nginx --no-log-prefix --tail=10000 --since 5m
 ```
 
