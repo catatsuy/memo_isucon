@@ -202,6 +202,12 @@ create trigger playlist_favorite_delete_trigger before delete on playlist_favori
 INSERT INTO playlist_favorite_count (`playlist_id`, `count`) SELECT `playlist_id`,count(*) FROM `playlist_favorite` GROUP BY `playlist_id`;
 ```
 
+## docker compose
+
+```sh
+docker compose logs nginx --no-log-prefix --tail=10000 --since 5m
+```
+
 ## tmpfs
 
 `/etc/fstab`
