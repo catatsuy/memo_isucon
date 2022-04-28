@@ -194,6 +194,12 @@ create trigger comment_insert_trigger before insert on comments for each row upd
 create trigger comment_delete_trigger before delete on comments for each row update posts set posts.count_comment = posts.count_comment - 1 where posts.id = OLD.post_id
 
 UPDATE posts, (select `post_id`,count(*) as `cnt` from `comments` group by `post_id`) as cc set posts.count_comment = cc.cnt where posts.id = cc.post_id
+
+create trigger playlist_favorite_insert_trigger before insert on playlist_favorite for each row insert into playlist_favorite_count (playlist_id,count) values (NEW.playlist_id, 1) on duplicate key update playlist_favorite_count.count = playlist_favorite_count.count + 1
+
+create trigger playlist_favorite_delete_trigger before delete on playlist_favorite for each row update playlist_favorite_count set playlist_favorite_count.count = playlist_favorite_count.count - 1 where playlist_favorite_count.playlist_id = OLD.playlist_id
+
+INSERT INTO playlist_favorite_count (`playlist_id`, `count`) SELECT `playlist_id`,count(*) FROM `playlist_favorite` GROUP BY `playlist_id`;
 ```
 
 ## tmpfs
