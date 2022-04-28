@@ -713,6 +713,14 @@ cf: https://github.com/DataDog/dd-trace-go/issues/270
 ```go
 levels := []int{4, 6, 7}
 query, args, err := sqlx.In("SELECT * FROM users WHERE level IN (?);", levels)
+
+users := make([]User, 0, len(levels))
+err = db.SelectContext(
+		ctx,
+		&users,
+		query,
+		args...,
+	)
 ```
 
 ```go
