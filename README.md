@@ -129,6 +129,10 @@ show variables like 'long%';
 FLUSH LOGS;
 ```
 
+```
+truncate -s 0 /var/log/mysql/slow.log
+```
+
 #### 無効にする
 
 ```
@@ -152,7 +156,7 @@ apt install percona-toolkit
 （依存も入るけど`sudo yum install -y perl-DBI perl-DBD-MySQL perl-Time-HiRes`で自前で入れることもできる）
 
 ```
-pt-query-digest --since "`date '+%F %T' -d '-5 minutes' --utc`" /var/log/mysql/slow.log | tee slowq.txt
+pt-query-digest --limit 100% --since "`date '+%F %T' -d '-5 minutes' --utc`" /var/log/mysql/slow.log | tee slowq.txt
 ```
 
 `--since="5m"` みたいな設定もできるが、MySQLのタイムゾーンとOSのタイムゾーンが異なっている場合、pt-query-digest上ではOSのタイムゾーンが使われる。UTCを使いたい場合はdateコマンドを使った方が楽。
@@ -255,6 +259,8 @@ sudo dd if=/dev/zero of=/dummy bs=1M count=50
 cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json" --sort=sum --reverse --filters 'Time > TimeAgo("5m")'
 
 cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+\.json","/users/\d+\.json","/transactions/\d+.png","/upload/[0-9a-f]+\.jpg" --sort=sum --reverse --filters 'Time > TimeAgo("5m")' | notify_slack -snippet -filetype txt
+
+truncate -s 0 /var/log/nginx/access.log
 ```
 
 https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
