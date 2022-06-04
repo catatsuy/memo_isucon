@@ -12,9 +12,13 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 ## 作業リスト
 
 ```
-## インフラ担当
+## 最初の作業
 
 * [ ] ポータルサイトにログインしてsshできることを確認
+* [ ] 全員共通の~/.ssh/configを作る
+
+## インフラ担当
+
 * [ ] 何もせずにベンチマークを流す
 * [ ] 動作しているプロセスを確認しておおよその構成を理解する
 * [ ] Go実装に切り替えてベンチマークを流す
@@ -26,18 +30,14 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 
 ## アプリケーション担当1
 
-* [ ] 全員共通の~/.ssh/configを作る
+* [ ] ssh-keygenして鍵をdeploy keyに登録 ssh -T git@github.com
+* [ ] コードをリポジトリにpushする
 * [ ] MySQL・画像などのバックアップを開発環境用に作成
 * [ ] スキーマ一覧を共有
 * [ ] 各テーブルのサイズを共有
 * [ ] ローカルで開発環境を作れないか考えて、作れそうなら作る
 * [ ] デプロイスクリプトを作る
 * [ ] initialize の動作を確認する
-
-## アプリケーション担当2
-
-* [ ] ssh-keygenして鍵をdeploy keyに登録 ssh -T git@github.com
-* [ ] コードをリポジトリにpushする
 * [ ] キーになる関数があれば特定する
 ```
 
