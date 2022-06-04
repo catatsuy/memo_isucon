@@ -173,7 +173,7 @@ SHOW GLOBAL VARIABLES LIKE 'log_bin';
 
 ### MySQL 8
 
-MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。なぜかmy.cnfでは無効にできないみたいなので `sudo systemctl status mysql` で設定ファイルを探して直接書き換える。
+MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。my.cnfで無効にできないときはsystemd側で以下のようにする。
 
 ```
 ExecStart=/usr/sbin/mysqld --disable-log-bin
@@ -219,6 +219,7 @@ INSERT INTO playlist_favorite_count (`playlist_id`, `count`) SELECT `playlist_id
 
 ```sh
 docker compose build app
+docker compose up app
 docker compose logs nginx --no-log-prefix --tail=10000 --since 5m
 ```
 
