@@ -188,6 +188,15 @@ https://dev.mysql.com/downloads/
 default-authentication-plugin = mysql_native_password
 ```
 
+#### 書き込みパフォーマンスを向上させる危険なオプション
+
+https://atsuizo.hatenadiary.jp/entry/2020/07/16/140000
+https://dev.mysql.com/doc/refman/8.0/en/innodb-redo-log.html#:~:text=An%20ALTER%20INSTANCE%20%5BENABLE%7CDISABLE,to%20be%20released%20before%20executing.
+
+```
+ALTER INSTANCE DISABLE INNODB REDO_LOG;
+```
+
 ### MySQL Trigger
 
 ```
