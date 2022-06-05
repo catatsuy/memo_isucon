@@ -459,7 +459,7 @@ done
 echo "finish deploy ${USER}"
 ```
 
-## go
+## Go
 
 ### UNIX domain Socket
 
@@ -958,6 +958,16 @@ CSVとして保存して表計算ソフトで開く。
 
 ```
 curl http://localhost:8000/debug/measure -o measure.csv
+```
+
+### echoのログ無効化
+
+```go
+e.Debug = false
+e.Logger.SetLevel(log.ERROR) // log.OFF
+
+// アクセスログ
+// e.Use(middleware.Logger())
 ```
 
 #### net/http/pprof
