@@ -223,6 +223,11 @@ docker compose up app
 docker compose logs nginx --no-log-prefix --tail=10000 --since 5m
 ```
 
+```yaml
+environment:
+  DEV: "${DEV:-0}"
+```
+
 ## tmpfs
 
 `/etc/fstab`
