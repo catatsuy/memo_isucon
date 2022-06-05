@@ -3,6 +3,11 @@
   apt:
     update_cache: yes
 
+- name: check arch
+  command: dpkg --print-architecture
+  register: arch_res
+  check_mode: no
+
 - name: install dependencies
   become: yes
   apt:

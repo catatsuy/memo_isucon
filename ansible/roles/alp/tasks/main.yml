@@ -1,19 +1,11 @@
-- name: install unzip
-  become: yes
-  apt:
-    name:
-      - unzip
-  tags:
-    - ubuntu
-
 - name: Download alp
   get_url:
-    url: https://github.com//tkuchiki/alp/releases/download/v{{ alp_version }}/alp_linux_amd64.zip
-    dest: /tmp/alp_linux_amd64.zip
+    url: https://github.com/catatsuy/alp/releases/download/v{{ alp_version }}/alp_linux_{{ arch_res.stdout }}.tar.gz
+    dest: /tmp/alp_linux.tar.gz
 
 - name: Extract alp
   unarchive:
-    src: /tmp/alp_linux_amd64.zip
+    src: /tmp/alp_linux.tar.gz
     dest: /tmp/
     remote_src: yes
 
