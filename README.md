@@ -1021,6 +1021,8 @@ ISUCON5予選のようにリクエストの度に変わる関数を`template.Fun
 
 https://github.com/goccy/go-json
 
+https://github.com/goccy/echo-tools/tree/main/json
+
 ### Goの書き方
 
   * [The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec)
