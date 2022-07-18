@@ -221,6 +221,9 @@ INSERT INTO playlist_favorite_count (`playlist_id`, `count`) SELECT `playlist_id
 docker compose build app
 docker compose up app
 docker compose logs nginx --no-log-prefix --tail=10000 --since 5m
+docker ps -a
+docker cp 34757ddbe7a3:/etc/nginx/nginx.conf .
+docker exec -it 97d91b5a58ed /bin/bash
 ```
 
 ```yaml
