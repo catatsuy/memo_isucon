@@ -87,6 +87,8 @@ default-character-set=utf8mb4
 
 ### mysqldump
 
+mysqlpumpも利用可能
+
 ```
 mysqldump -uroot データベース名 > dump.sql
 mysql -uroot データベース名 < dump.sql
@@ -112,6 +114,41 @@ WHERE
   table_schema=database()
 ORDER BY
   (data_length+index_length) DESC;
+```
+
+#### 高速なdump
+
+MySQL Shellを使う方法。MySQL ShellはMySQL公式のリポジトリからインストールする必要があり、LinuxのARM用は存在しない。かなり面倒なのと出力されるファイルはtsvベースでmysqldumpなどとは異なる。
+
+https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-install-linux-quick.html
+
+```
+mysqlsh -uroot
+> util.dumpInstance("/var/tmp/shell")
+
+> util.loadDump("/var/tmp/shell")
+```
+
+MySQL 8.0.17で追加されたcloneプラグインを使う
+
+```
+mysql> INSTALL PLUGIN clone SONAME 'mysql_clone.so';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CLONE LOCAL DATA DIRECTORY = '/var/tmp/clone';
+```
+
+```sh
+cp -r /var/tmp/clone /var/lib/mysql
+chown -R mysql. /var/lib/mysql
+```
+
+MariaDBにはPercona XtraBackupのForkのmariabackupがある。
+
+datadirを直接コピーする方法もあるが、my.cnfの兼ね合いもあるので他のサーバーに持って行くのは面倒。安全に停止する方法は以下。
+
+```sql
+SET GLOBAL innodb_fast_shutdown=0;
 ```
 
 ### Slow Query
