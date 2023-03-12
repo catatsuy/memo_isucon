@@ -775,6 +775,15 @@ func InStatement(count int) string {
 }
 ```
 
+### Goでbulk insertする
+
+sqlxを使うと楽
+
+```go
+places := []*Place{&place1, &place2}
+db.NamedExec("INSERT INTO place (country, telcode) VALUES (:country, :telcode)", places)
+```
+
 ### GoでMySQLの接続をUNIXドメインソケットにする
 
 https://github.com/go-sql-driver/mysql
