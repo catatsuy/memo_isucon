@@ -969,6 +969,8 @@ b = append(b, client.Addr().String()...)
 b = append(b, ' ')
 b = time.Now().AppendFormat(b, "2006-01-02 15:04:05.999999999 -0700 MST")
 r = string(b)
+// メモリコピーをなくせる（nsレベルの最適化になる）
+r = unsafe.String(&b[0], len(b))
 ```
 
 profiling結果に`runtime.mallocgc`が多い場合はこういった小さいメモリのアロケートが多い可能性がある。
