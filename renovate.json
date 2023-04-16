@@ -8,6 +8,7 @@
       "fileMatch": [
         "main.yml"
       ],
+      "extractVersionTemplate": "^v(?<version>.*)$",
       "matchStrings": [
         "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_version: (?<currentValue>.*)\n"
       ],
