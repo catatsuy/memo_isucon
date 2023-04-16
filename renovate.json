@@ -6,13 +6,12 @@
   "regexManagers": [
     {
       "fileMatch": [
-        "ansible/roles/nginx_build/vars/main.yml"
+        "main.yml"
       ],
       "matchStrings": [
-        "nginx_build_version: \"(?<currentValue>.*)\""
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\n.*?_version: (?<currentValue>.*)\n"
       ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "nginx-build/nginx-build"
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
     }
   ]
 }
