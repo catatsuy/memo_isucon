@@ -2,5 +2,18 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchPaths": ["ansible/roles/nginx_build/vars/main.yml"],
+      "datasources": ["github-releases"],
+      "depNameTemplate": "cubicdaiya/nginx-build",
+      "versioning": "semver",
+      "updateTypes": ["minor", "patch"],
+      "groupName": "nginx-build",
+      "commitMessageTopic": "nginx-build",
+      "commitMessageExtra": "in ansible/roles/nginx_build/vars/main.yml",
+      "commitMessage": "{{commitMessageTopic}} updated to {{#if isSingleVersion}}{{newVersion}}{{else}}{{newValue}}{{/if}}{{#if commitMessageExtra}} {{commitMessageExtra}}{{/if}}"
+    }
   ]
 }
