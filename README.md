@@ -837,8 +837,8 @@ if maxConns != "" {
 }
 db.SetMaxOpenConns(maxConnsInt)
 db.SetMaxIdleConns(maxConnsInt*2)
-// db.SetConnMaxLifetime(time.Minute * 2)
-db.SetConnMaxIdleTime(time.Minute * 2)
+db.SetConnMaxLifetime(5* time.Minute)
+// db.SetConnMaxIdleTime(2 * time.Minute)
 
 for {
 	err := db.Ping()
