@@ -20,6 +20,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
 
+      - name: Create Vault Password File
+        run: echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_password_private
+        working-directory: ansible
+
       - name: Run Ansible playbook
         run: |
           cd ansible
