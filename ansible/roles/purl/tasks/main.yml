@@ -1,0 +1,18 @@
+- name: Download purl
+  get_url:
+    url: https://github.com/catatsuy/purl/releases/latest/download/purl-linux-{{ arch_res.stdout }}.tar.gz
+    dest: /tmp/purl-linux.tar.gz
+
+- name: Extract purl
+  unarchive:
+    src: /tmp/purl-linux.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: Copy to /usr/local/bin/
+  become: yes
+  copy:
+    src: /tmp/purl
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: "0755"
