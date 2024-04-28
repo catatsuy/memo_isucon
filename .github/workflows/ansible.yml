@@ -1,6 +1,9 @@
 name: Ansible CI
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - "ansible/**"
 
 jobs:
   build:
