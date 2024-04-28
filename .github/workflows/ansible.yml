@@ -27,4 +27,4 @@ jobs:
       - name: Run Ansible playbook
         run: |
           cd ansible
-          ansible-playbook -i "localhost," -c local site.yml
+          ansible-playbook -i test site.yml
