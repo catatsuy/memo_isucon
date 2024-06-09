@@ -1,3 +1,0 @@
----
-# datasource=github-releases depName=catatsuy/notify_slack
-notify_slack_version: 0.5.0
