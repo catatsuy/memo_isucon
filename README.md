@@ -889,7 +889,7 @@ dsn := fmt.Sprintf(
     * いくつかタイムアウトの設定があるので適宜設定する
   * レスポンスを受け取ったら必ずBodyをCloseする
     * Closeを忘れるとTCPコネクションが再利用されない
-    * （ISUCONではあまりないと思うが）`res.Body`をReadせずにCloseするとコネクションが切断されるので、`ioutil.ReadAll`などを使って読み切る
+    * （ISUCONではあまりないと思うが）`res.Body`をReadせずにCloseするとコネクションが切断されるので、`io.ReadAll`などを使って読み切る
     * 本来はISUCONの初期実装で実装されているはずだが、初期実装がバグっている可能性もあるので確認すること
 
 ``` go
@@ -915,7 +915,7 @@ if err != nil {
 	return err
 }
 defer res.Body.Close()
-_, err = ioutil.ReadAll(res.Body)
+_, err = io.ReadAll(res.Body)
 if err != nil {
 	log.Fatal(err)
 }
@@ -935,7 +935,7 @@ pprofではネットワークで待ちになっている時間などは顕在化
 
 https://godoc.org/github.com/pkg/profile を使うと楽。必ずStopを呼び出す必要があるので以下のようにして無理矢理呼び出すのがおすすめ。
 
-デフォルトは`ioutil.TempDir("", "profile")`で指定されたディレクトリにファイルができる。環境変数`TMPDIR`にもよるが、Linuxなら`/tmp/profile/cpu.pprof`というファイルができるはず。systemdならPrivateTmpがデフォルトで有効なので注意。
+デフォルトは`os.CreateTemp("", "profile")`で指定されたディレクトリにファイルができる。環境変数`TMPDIR`にもよるが、Linuxなら`/tmp/profile/cpu.pprof`というファイルができるはず。systemdならPrivateTmpがデフォルトで有効なので注意。
 
 ```go
 import "github.com/pkg/profile"
