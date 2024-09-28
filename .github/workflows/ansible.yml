@@ -31,9 +31,9 @@ jobs:
       - name: Run Ansible playbook
         run: |
           cd ansible
-          ansible-playbook --diff -i test site.yml
+          ansible-playbook -i test site.yml
 
       - name: Run Ansible playbook in check mode
         run: |
           cd ansible
-          ansible-playbook --check --diff -i test site.yml
+          ansible-playbook --check -i test site.yml
