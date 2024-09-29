@@ -561,38 +561,31 @@ func (c *cache[K, V]) Get(key K) (V, bool) {
 	return v, found
 }
 
-type Signed interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64
-}
-
-type Unsigned interface {
-	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
-}
-
-type Integer interface {
-	Signed | Unsigned
-}
-
-type cacheInteger[K comparable, V Integer] struct {
-	// Setが多いならsync.Mutex
+// cacheInteger with manual type constraints instead of using external interfaces.
+type cacheInteger[K comparable, V interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}] struct {
 	sync.RWMutex
 	items map[K]V
 }
 
-func NewCacheInteger[K comparable, V Integer]() *cacheInteger[K, V] {
-	m := make(map[K]V)
-	c := &cacheInteger[K, V]{
-		items: m,
+// NewCacheInteger constructor for creating a new cache.
+func NewCacheInteger[K comparable, V interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}]() *cacheInteger[K, V] {
+	return &cacheInteger[K, V]{
+		items: make(map[K]V),
 	}
-	return c
 }
 
+// Set a value in the cache.
 func (c *cacheInteger[K, V]) Set(key K, value V) {
 	c.Lock()
 	c.items[key] = value
 	c.Unlock()
 }
 
+// Get a value from the cache.
 func (c *cacheInteger[K, V]) Get(key K) (V, bool) {
 	c.RLock()
 	v, found := c.items[key]
@@ -600,6 +593,7 @@ func (c *cacheInteger[K, V]) Get(key K) (V, bool) {
 	return v, found
 }
 
+// Incr increments the value in the cache by the given value.
 func (c *cacheInteger[K, V]) Incr(key K, value V) {
 	c.Lock()
 	v, found := c.items[key]
