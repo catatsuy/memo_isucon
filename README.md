@@ -533,6 +533,8 @@ curl --unix-socket server.sock http:/
 
 ### Goでインメモリキャッシュ
 
+https://github.com/catatsuy/cache
+
 ``` go
 type cache[K comparable, V any] struct {
 	// Setが多いならsync.Mutex
