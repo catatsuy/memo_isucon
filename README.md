@@ -90,14 +90,14 @@ default-character-set=utf8mb4
 mysqlpumpも利用可能
 
 ```
-mysqldump -uroot データベース名 > dump.sql
-mysql -uroot データベース名 < dump.sql
+mysqldump データベース名 > dump.sql
+mysql データベース名 < dump.sql
 ```
 
 スキーマだけを得たい場合
 
 ```
-mysqldump -u root --compact --no-data データベース名 | grep -v "^SET" | grep -v "^/\*\!" | perl -ple 's@CREATE TABLE @\nCREATE TABLE @g'
+mysqldump --compact --no-data データベース名 | grep -v "^SET" | grep -v "^/\*\!" | perl -ple 's@CREATE TABLE @\nCREATE TABLE @g'
 ```
 
 テーブルのサイズを得る
