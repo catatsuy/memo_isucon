@@ -25,13 +25,12 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] 必要なパッケージなどインストール
 * [ ] データベースなど各アプリケーションの設定値を確認してgitにコミットする
 * [ ] nginxで計測できるようにする（alpを使う）
-* [ ] ハードウェアの構成を調べる
+* [ ] ハードウェアの構成を把握する
 
 ## アプリケーション担当1
 
 * [ ] ssh-keygenして鍵をdeploy keyに登録 ssh -T git@github.com
 * [ ] コードをリポジトリにpushする
-* [ ] MySQL・画像などのバックアップを開発環境用に作成
 * [ ] スキーマ一覧を共有
 * [ ] 各テーブルのサイズを共有
 * [ ] ローカルで開発環境を作れないか考えて、作れそうなら作る
@@ -319,7 +318,8 @@ truncate -s 0 /var/log/nginx/access.log
 
 https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 
-キャッシュがHITしているか確認したい場合はログに `"\tcache_status:$upstream_cache_status"` を追加
+* query parameterが必要な場合は`-q`を付与する
+* キャッシュがHITしているか確認したい場合はログに `"\tcache_status:$upstream_cache_status"` を追加
 
 ### nginx-build
 
