@@ -21,6 +21,7 @@
       - tmux
       - lsof
       - percona-toolkit
+      - etckeeper
 
 - name: set editor vim
   become: yes

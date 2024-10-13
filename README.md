@@ -26,7 +26,6 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] データベースなど各アプリケーションの設定値を確認してgitにコミットする
 * [ ] nginxで計測できるようにする（alpを使う）
 * [ ] ハードウェアの構成を調べる
-* [ ] netdata導入
 
 ## アプリケーション担当1
 
@@ -325,7 +324,7 @@ https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 ### nginx-build
 
 ```
-nginx-build -d work -openssl -opensslversion 3.0.3 -pcre -zlib -c configure
+nginx-build -d work -openssl -pcre -zlib -c configure
 ```
 
 ## ulimit
@@ -423,6 +422,12 @@ sudo lsof -nP -i4TCP -sTCP:ESTABLISHED
 git init
 git config --global user.name "isucon"
 git config --global user.email "isucon@isucon"
+
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:catatsuy/test_empty.git
+git push -u origin main
 ```
 
 ```sh
@@ -470,7 +475,7 @@ Host *
 
 set -x
 
-./deploy_body.sh | notify_slack
+./deploy_body.sh 2>&1 | notify_slack
 
 ## deploy_body.sh
 #!/bin/bash
@@ -719,6 +724,59 @@ func (c *cacheLog) Rotate() []isulogger.Log {
 	c.items = make([]isulogger.Log, 0, 100)
 	c.Unlock()
 	return tmp
+}
+```
+
+### Goで簡易ロック
+
+```go
+package main
+
+import (
+	"sync"
+)
+
+type LockManager[T comparable] struct {
+	mu    sync.Mutex
+	locks map[T]*sync.Mutex
+}
+
+func NewLockManager[T comparable]() *LockManager[T] {
+	return &LockManager[T]{
+		locks: make(map[T]*sync.Mutex),
+	}
+}
+
+func (lm *LockManager[T]) getLock(id T) *sync.Mutex {
+	lm.mu.Lock()
+	defer lm.mu.Unlock()
+
+	if lock, exists := lm.locks[id]; exists {
+		return lock
+	}
+
+	lock := &sync.Mutex{}
+	lm.locks[id] = lock
+	return lock
+}
+
+func (lm *LockManager[T]) Lock(id T) func() {
+	lock := lm.getLock(id)
+	lock.Lock()
+
+	return func() {
+		lock.Unlock()
+	}
+}
+
+func main() {
+	var lmInt64 = NewLockManager[int64]()
+	unlock := lmInt64.Lock(123)
+	defer unlock()
+
+	var lmString = NewLockManager[string]()
+	unlockStr := lmString.Lock("myLock")
+	defer unlockStr()
 }
 ```
 
@@ -1087,6 +1145,18 @@ patch -p0 < thisis.patch
 
   * [GoでISUCONを戦う話](https://gist.github.com/catatsuy/e627aaf118fbe001f2e7c665fda48146)
 
+## etckeeper
+
+```
+sudo apt install etckeeper
+
+sudo etckeeper init
+sudo etckeeper commit "Initial commit of /etc"
+
+sudo etckeeper vcs diff
+sudo etckeeper commit "Updated hostname"
+```
+
 ## おまじない集
 
 ### dstat
@@ -1104,6 +1174,12 @@ rsync -vau /hoge/fuga/ catatsuy.org:/hoge/fuga/
 ```
 
 ディレクトリの最後には必ず `/` を付ける
+
+### tar cvf
+
+```
+tar cvf backup.tar /home/isucon/webapp/sql/
+```
 
 ### 参考 URL
 
