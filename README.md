@@ -37,6 +37,11 @@ wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh
 * [ ] デプロイスクリプトを作る
 * [ ] initialize の動作を確認する
 * [ ] キーになる関数があれば特定する
+
+時間が余ったら
+
+* レギュレーションを読む
+* アプリケーションを使ってみる
 ```
 
 ## MySQL
@@ -258,7 +263,9 @@ docker compose up app
 docker compose logs nginx --no-log-prefix --tail=10000 --since 5m
 docker ps -a
 docker cp 34757ddbe7a3:/etc/nginx/nginx.conf .
+docker cp $(docker ps -q --filter "name=nginx"):/etc/nginx/nginx.conf .
 docker exec -it 97d91b5a58ed /bin/bash
+docker exec -it $(docker ps -q --filter "name=nginx") /bin/bash
 ```
 
 ```yaml
@@ -286,6 +293,8 @@ sudo swapon /mnt/512MiB.swap
 
 # 再起動しても有効にしたい場合
 echo "\n/mnt/512MiB.swap  none  swap  sw  0 0" >> /etc/fstab
+
+sudo swapon --show
 ```
 
 [SwapFaq - Community Help Wiki](https://help.ubuntu.com/community/SwapFaq)
