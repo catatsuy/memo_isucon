@@ -300,7 +300,7 @@ sudo dd if=/dev/zero of=/dummy bs=1M count=50
 
 ## sysctl.conf
 
-`sysctl -p` で適用。もしくは `sudo service procps reload`。
+`sudo service procps force-reload` or `sudo systemctl force-reload procps`
 
   * cannot assign requested はローカルポート
   * ip_conntrack: table full, dropping packet (`dmesg`)
@@ -361,28 +361,12 @@ sudo apt purge update-notifier-common
 snapdがメモリを食い潰すことがある。
 
 ```
-sudo systemctl stop snapd
-sudo systemctl disable snapd
 sudo systemctl stop snapd.socket
 sudo systemctl disable snapd.socket
+sudo systemctl stop snapd
+sudo systemctl disable snapd
 
 sudo systemctl disable snap.amazon-ssm-agent.amazon-ssm-agent.service
-```
-
-## netdata
-
-分解能1秒・設定不要・省メモリ・1時間分のデータ保持・台数制限なしのクラウドサービスあり
-
-```
-# install
-bash <(curl -Ss https://my-netdata.io/kickstart.sh) --no-updates --stable-channel
-
-# set netdata.cloud (Add nodes to General)
-sudo netdata-claim.sh -token=aaaaaa -rooms=bbbbb -url=https://app.netdata.cloud
-
-# stop
-sudo systemctl stop netdata
-sudo systemctl disable netdata
 ```
 
 ## htop
@@ -464,34 +448,6 @@ Host isu02
 Host *
   ServerAliveInterval 5
   ServerAliveCountMax 12
-```
-
-### deploy.sh
-
-``` shell
-## deploy.sh
-
-#!/bin/bash
-
-set -x
-
-./deploy_body.sh 2>&1 | notify_slack
-
-## deploy_body.sh
-#!/bin/bash
-
-set -x
-
-echo "start deploy ${USER}"
-GOOS=linux GOARCH=amd64 go build -o isucari_linux
-for server in isu01 isu02; do
-  ssh -t $server "sudo systemctl stop isucari.golang.service"
-  scp ./isucari_linux $server:/home/isucon/isucari/webapp/go/isucari
-  rsync -vau ../sql/ $server:/home/isucon/isucari/webapp/sql/
-  ssh -t $server "sudo systemctl start isucari.golang.service"
-done
-
-echo "finish deploy ${USER}"
 ```
 
 ## Go
@@ -1009,7 +965,7 @@ func getProfileStop(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-`apt install graphviz`してから`go tool pprof --pdf /tmp/profile/cpu.pprof > tmp.pdf`するとPDFになる。LinuxのpprofファイルをMacで処理することもできる。
+`apt install graphviz`してから`go tool pprof --pdf /home/isucon/profile/cpu.pprof > tmp.pdf`するとPDFになる。LinuxのpprofファイルをMacで処理することもできる。
 
 ### Goでボトルネックになりやすいところ
 
@@ -1080,6 +1036,9 @@ s.mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
 s.mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
 s.mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 s.mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
+// for echo
+// e.GET("/debug/pprof/", echo.WrapHandler(http.HandlerFunc(pprof.Index)))
 
 go func() {
 	log.Println(http.Serve(l, nil))

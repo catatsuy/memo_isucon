@@ -83,3 +83,23 @@ for _, t := range transactionEvidences {
 	transactionEvidenceMap[t.ItemID] = t
 }
 ```
+
+## netdata
+
+分解能1秒・設定不要・省メモリ・1時間分のデータ保持・台数制限なしのクラウドサービスあり
+
+```
+# install
+bash <(curl -Ss https://my-netdata.io/kickstart.sh) --no-updates --stable-channel
+
+# set netdata.cloud (Add nodes to General)
+sudo netdata-claim.sh -token=aaaaaa -rooms=bbbbb -url=https://app.netdata.cloud
+
+# stop
+sudo systemctl stop netdata
+sudo systemctl disable netdata
+```
+
+## sysctl.conf
+
+`sysctl -p` で適用。もしくは `sudo service procps reload`。

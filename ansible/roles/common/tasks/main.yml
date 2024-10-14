@@ -22,6 +22,7 @@
       - lsof
       - percona-toolkit
       - etckeeper
+      - graphviz
 
 - name: set editor vim
   become: yes

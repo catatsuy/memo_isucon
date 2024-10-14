@@ -1,5 +1,5 @@
 #!/bin/bash
 
-git clone https://github.com/catatsuy/memo_isucon.git ~/dotfiles_catatsuy
+git clone https://github.com/catatsuy/memo_isucon.git ~/memo_isucon
 
-(cd ~/dotfiles_catatsuy && ./setup.sh)
+(cd ~/memo_isucon && ./setup.sh)
