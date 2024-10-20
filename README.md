@@ -90,8 +90,6 @@ default-character-set=utf8mb4
 
 ### mysqldump
 
-mysqlpumpも利用可能
-
 ```
 mysqldump データベース名 > dump.sql
 mysql データベース名 < dump.sql
@@ -121,7 +119,7 @@ ORDER BY
 
 #### 高速なdump
 
-MySQL Shellを使う方法。MySQL ShellはMySQL公式のリポジトリからインストールする必要があり、LinuxのARM用は存在しない。かなり面倒なのと出力されるファイルはtsvベースでmysqldumpなどとは異なる。
+MySQL Shellを使う方法。MySQL ShellはMySQL公式のリポジトリからインストールする必要があり、LinuxのARM用は存在しない。出力されるファイルはtsvベースでmysqldumpなどとは異なる。
 
 https://dev.mysql.com/doc/mysql-shell/8.0/en/mysql-shell-install-linux-quick.html
 
