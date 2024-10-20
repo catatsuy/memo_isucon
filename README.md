@@ -336,6 +336,43 @@ https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 nginx-build -d work -openssl -pcre -zlib -c configure
 ```
 
+### kTLS対応のnginx
+
+OpenSSL 3.0以降ならkTLSが使える可能性がある。Ubuntu 24.04なら使える。最短作業。
+
+```shell
+# lsmodでtlsが有効になっているか確認
+$ sudo lsmod | grep tls
+tls                   155648  0
+# Ubuntuなら多分デフォルト有効だが、何も出なければ有効にする
+$ sudo modprobe tls
+# 再起動しても有効にする。最初から有効になっていたら不要
+$ echo "tls" | sudo tee -a /etc/modules
+```
+
+nginx.confに以下の設定を追加。
+
+```
+ssl_conf_command Options KTLS;
+```
+
+有効になっているか確認するのはerror.logをdebugにした上でリクエストを飛ばして、以下のログが出るか確認する。
+
+```shell
+ubuntu@ip-172-31-7-186:~$ sudo grep SSL_sendfile /var/log/nginx/error.log
+2024/10/20 07:18:37 [debug] 2530#2530: *1 SSL_sendfile: 615
+2024/10/20 07:21:55 [debug] 2530#2530: *3 SSL_sendfile: 615
+ubuntu@ip-172-31-7-186:~$ sudo grep BIO /var/log/nginx/error.log
+2024/10/20 07:18:37 [debug] 2530#2530: *1 BIO_get_ktls_send(): 1
+2024/10/20 07:21:55 [debug] 2530#2530: *3 BIO_get_ktls_send(): 1
+```
+
+nginx-buildを使う場合は以下のオプションを追加する。
+
+```
+ --with-openssl-opt=enable-ktls \
+```
+
 ## ulimit
 
 systemdの方が楽。
