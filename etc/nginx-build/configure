@@ -35,4 +35,4 @@
   --with-stream_ssl_module \
   --with-stream_ssl_preread_module \
   --with-stream_realip_module \
-  --with-openssl-opt=enable-ktls
+  --with-openssl-opt=enable-ktls #--with-debug

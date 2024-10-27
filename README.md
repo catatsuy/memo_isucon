@@ -332,6 +332,8 @@ https://github.com/tkuchiki/alp/blob/master/docs/usage_samples.md
 
 ```
 nginx-build -d work -openssl -pcre -zlib -c configure
+
+sudo rm -rf /etc/nginx/modules-enabled/
 ```
 
 ### kTLS対応のnginx
