@@ -282,3 +282,18 @@ func main() {
 	defer unlockStr()
 }
 ```
+
+## MySQL 8
+
+my.cnfで無効にできないときはsystemd側で以下のようにする。
+
+```
+ExecStart=/usr/sbin/mysqld --disable-log-bin
+```
+
+`systemctl daemon-reload`を忘れないこと
+
+```
+[mysqld]
+default-authentication-plugin = mysql_native_password
+```

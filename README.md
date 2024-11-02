@@ -211,20 +211,9 @@ SHOW GLOBAL VARIABLES LIKE 'log_bin';
 
 ### MySQL 8
 
-MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。my.cnfで無効にできないときはsystemd側で以下のようにする。
-
-```
-ExecStart=/usr/sbin/mysqld --disable-log-bin
-```
-
-`systemctl daemon-reload`を忘れないこと
-
 https://dev.mysql.com/downloads/
 
-```
-[mysqld]
-default-authentication-plugin = mysql_native_password
-```
+MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。
 
 #### 書き込みパフォーマンスを向上させる危険なオプション
 
