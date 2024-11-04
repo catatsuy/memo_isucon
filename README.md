@@ -533,6 +533,75 @@ https://github.com/catatsuy/cache
 
 https://pkg.go.dev/github.com/catatsuy/cache
 
+### Goで更新をまとめつつ、インメモリキャッシュを使う
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/catatsuy/cache"
+	"github.com/catatsuy/sync/singleflight"
+)
+
+var group singleflight.Group[string]
+var mCache = cache.NewWriteHeavyCache[int, string]()
+
+func main() {
+	mCache.Set(1, "apple")
+	value, found := mCache.Get(1)
+	if found {
+		fmt.Println("Found:", value)
+	} else {
+		fmt.Println("Not found")
+	}
+
+	exit := make(chan struct{})
+
+	key := 2
+	go func() {
+		defer close(exit)
+		for i := 0; i < 10; i++ {
+			result, err := GetWithSingleFlight(key)
+			if err != nil {
+				fmt.Println("Error:", err)
+			}
+			fmt.Println("Result:", result)
+		}
+	}()
+
+	<-exit
+}
+
+func GetWithSingleFlight(key int) (string, error) {
+	value, found := mCache.Get(key)
+	if found {
+		return value, nil
+	}
+
+	vv, err, _ := group.Do(fmt.Sprintf("cacheGet_%d", key), func() (string, error) {
+		value, err := HeavyGet(key)
+		if err != nil {
+			return "", err
+		}
+		mCache.Set(key, value)
+		return value, nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return vv, nil
+}
+
+func HeavyGet(key int) (string, error) {
+	fmt.Println("HeavyGet for key:", key)
+	return fmt.Sprintf("heavy_result_for_%d", key), nil
+}
+```
+
 ### Goで簡易ジョブキュー
 
 ```go
