@@ -779,7 +779,7 @@ if maxConns != "" {
 }
 db.SetMaxOpenConns(maxConnsInt)
 db.SetMaxIdleConns(maxConnsInt*2)
-db.SetConnMaxLifetime(5* time.Minute)
+db.SetConnMaxLifetime(3 * time.Minute)
 // db.SetConnMaxIdleTime(2 * time.Minute)
 
 for {
