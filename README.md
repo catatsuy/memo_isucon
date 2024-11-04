@@ -540,6 +540,8 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"time"
 
 	"github.com/catatsuy/cache"
 	"github.com/catatsuy/sync/singleflight"
@@ -557,21 +559,21 @@ func main() {
 		fmt.Println("Not found")
 	}
 
-	exit := make(chan struct{})
+	var wg sync.WaitGroup
 
-	key := 2
-	go func() {
-		defer close(exit)
-		for i := 0; i < 10; i++ {
-			result, err := GetWithSingleFlight(key)
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			result, err := GetWithSingleFlight(i%2 + 2)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
 			fmt.Println("Result:", result)
-		}
-	}()
+		}(i)
+	}
 
-	<-exit
+	wg.Wait()
 }
 
 func GetWithSingleFlight(key int) (string, error) {
@@ -598,6 +600,7 @@ func GetWithSingleFlight(key int) (string, error) {
 
 func HeavyGet(key int) (string, error) {
 	fmt.Println("HeavyGet for key:", key)
+	time.Sleep(time.Millisecond)
 	return fmt.Sprintf("heavy_result_for_%d", key), nil
 }
 ```
