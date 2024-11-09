@@ -544,11 +544,12 @@ import (
 	"time"
 
 	"github.com/catatsuy/cache"
-	"github.com/catatsuy/sync/singleflight"
 )
 
-var group singleflight.Group[string]
-var mCache = cache.NewWriteHeavyCache[int, string]()
+var (
+	sf     = cache.NewSingleflightGroup[string]()
+	mCache = cache.NewWriteHeavyCache[int, string]()
+)
 
 func main() {
 	mCache.Set(1, "apple")
@@ -582,7 +583,7 @@ func GetWithSingleFlight(key int) (string, error) {
 		return value, nil
 	}
 
-	vv, err, _ := group.Do(fmt.Sprintf("cacheGet_%d", key), func() (string, error) {
+	vv, err := sf.Do(fmt.Sprintf("cacheGet_%d", key), func() (string, error) {
 		value, err := HeavyGet(key)
 		if err != nil {
 			return "", err
