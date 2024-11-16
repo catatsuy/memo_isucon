@@ -213,7 +213,8 @@ SHOW GLOBAL VARIABLES LIKE 'log_bin';
 
 https://dev.mysql.com/downloads/
 
-MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う。
+* MySQL 8はデフォルトでbinlogを出力するのですごい勢いでディスクを使う
+* 複数台構成にするときはbind-addressを0.0.0.0にする
 
 #### 書き込みパフォーマンスを向上させる危険なオプション
 
@@ -944,14 +945,25 @@ CSVとして保存して表計算ソフトで開く。
 curl http://localhost:8000/debug/measure -o measure.csv
 ```
 
-### echoのログ無効化
+### ログ無効化
 
 ```go
+// echo
 e.Debug = false
 e.Logger.SetLevel(log.ERROR) // log.OFF
 
 // アクセスログ
 // e.Use(middleware.Logger())
+
+
+// slog
+devNull, err := os.OpenFile(os.DevNull, os.O_WRONLY, 0)
+if err != nil {
+	panic(err)
+}
+defer devNull.Close()
+logger := slog.New(slog.NewTextHandler(devNull, &slog.HandlerOptions{}))
+slog.SetDefault(logger)
 ```
 
 #### net/http/pprof
@@ -971,7 +983,11 @@ s.mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 s.mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
 // for echo
-// e.GET("/debug/pprof/", echo.WrapHandler(http.HandlerFunc(pprof.Index)))
+e.GET("/debug/pprof/", echo.WrapHandler(http.HandlerFunc(pprof.Index)))
+e.GET("/debug/pprof/cmdline", echo.WrapHandler(http.HandlerFunc(pprof.Cmdline)))
+e.GET("/debug/pprof/profile", echo.WrapHandler(http.HandlerFunc(pprof.Profile)))
+e.GET("/debug/pprof/symbol", echo.WrapHandler(http.HandlerFunc(pprof.Symbol)))
+e.GET("/debug/pprof/trace", echo.WrapHandler(http.HandlerFunc(pprof.Trace)))
 
 go func() {
 	log.Println(http.Serve(l, nil))
