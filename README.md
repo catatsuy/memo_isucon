@@ -3,12 +3,6 @@ ISUCON
 
 ISUCONのめも
 
-```
-curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
-# not installed curl
-wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
-```
-
 ## 作業リスト
 
 ```

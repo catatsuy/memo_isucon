@@ -297,3 +297,9 @@ ExecStart=/usr/sbin/mysqld --disable-log-bin
 [mysqld]
 default-authentication-plugin = mysql_native_password
 ```
+
+```
+curl -L https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+# not installed curl
+wget -O - https://raw.githubusercontent.com/catatsuy/memo_isucon/master/quick.sh | bash
+```
