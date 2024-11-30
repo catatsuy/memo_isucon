@@ -527,6 +527,96 @@ https://github.com/catatsuy/cache
 
 https://pkg.go.dev/github.com/catatsuy/cache
 
+### Goでインメモリキャッシュのデータを永続化して、起動時に読み込む
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/catatsuy/cache"
+)
+
+const cacheFileName = "cache_data.json"
+
+var mCache = cache.NewWriteHeavyCache[int, string]()
+
+func main() {
+	if _, err := os.Stat(cacheFileName); err == nil {
+		fmt.Println("Cache file found. Loading data...")
+		if err := loadCacheFromFile(cacheFileName); err != nil {
+			fmt.Println("Failed to load cache:", err)
+			return
+		}
+	} else {
+		fmt.Println("No cache file found. Starting with an empty cache.")
+	}
+
+	mCache.Set(1, "apple")
+	mCache.Set(2, "banana")
+
+	sigs := make(chan os.Signal, 1)
+	done := make(chan struct{})
+
+	signal.Notify(sigs, syscall.SIGTERM, syscall.SIGINT)
+
+	go func() {
+		sig := <-sigs
+		fmt.Println("\nReceived signal:", sig)
+
+		if err := saveCacheToFile(cacheFileName); err != nil {
+			fmt.Println("Failed to save cache:", err)
+			return
+		}
+
+		done <- struct{}{}
+	}()
+
+	<-done
+
+	fmt.Println("Cache successfully saved to file.")
+}
+
+// saveCacheToFile serializes the cache data and writes it to a file
+func saveCacheToFile(fileName string) error {
+	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create file: %w", err)
+	}
+	defer file.Close()
+
+	items := mCache.GetItems()
+	if err := json.NewEncoder(file).Encode(items); err != nil {
+		return fmt.Errorf("failed to encode JSON: %w", err)
+	}
+
+	return nil
+}
+
+// loadCacheFromFile reads the cache data from a file and deserializes it
+func loadCacheFromFile(fileName string) error {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %w", err)
+	}
+	defer file.Close()
+
+	items := make(map[int]string)
+	if err := json.NewDecoder(file).Decode(&items); err != nil {
+		return fmt.Errorf("failed to decode JSON: %w", err)
+	}
+
+	mCache.SetItems(items)
+
+	return nil
+}
+```
+
 ### Goで更新をまとめつつ、インメモリキャッシュを使う
 
 ```go
