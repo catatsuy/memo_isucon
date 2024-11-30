@@ -753,6 +753,71 @@ func (c *cacheLog) Rotate() []isulogger.Log {
 }
 ```
 
+### Goで新旧のデータを比較して差分をlogに出す
+
+```go
+package main
+
+import (
+	"log"
+	"time"
+
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
+)
+
+type User struct {
+	ID        int
+	Name      string
+	Score     int
+	Timestamp time.Time
+}
+
+func main() {
+	oldData := User{
+		ID:    1,
+		Name:  "Alice",
+		Score: 100,
+	}
+
+	newData := User{
+		ID:    1,
+		Name:  "Alice",
+		Score: 200,
+	}
+
+	diff := cmp.Diff(oldData, newData)
+
+	if diff != "" {
+		log.Printf("Data changed:\n%s", diff)
+	} else {
+		log.Println("No changes detected.")
+	}
+
+	oldData = User{
+		ID:        1,
+		Name:      "Alice",
+		Score:     100,
+		Timestamp: time.Now().Add(-1 * time.Hour),
+	}
+
+	newData = User{
+		ID:        1,
+		Name:      "Alice",
+		Score:     200,
+		Timestamp: time.Now(),
+	}
+
+	diff = cmp.Diff(oldData, newData, cmpopts.IgnoreFields(User{}, "ID", "Timestamp"))
+
+	if diff != "" {
+		log.Printf("Filtered Diff:\n%s", diff)
+	} else {
+		log.Println("No significant changes detected.")
+	}
+}
+```
+
 ### Go側でSQLをtraceする
 
 ```go
