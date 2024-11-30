@@ -1184,6 +1184,11 @@ https://github.com/goccy/go-json
 
 https://github.com/goccy/echo-tools/tree/main/json
 
+### GOGC
+
+* defaultは100で、大きくするとGCの回数が減る
+* メモリが余っていたら200とかにしてみるとよさそう
+
 ### Goの書き方
 
   * [The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec)
