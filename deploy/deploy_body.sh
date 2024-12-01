@@ -10,6 +10,9 @@ for server in isu01 isu02; do
   # rsync -vau --exclude=app ./ $server:/home/isucon/private_isu/webapp/golang/
   # ssh -t $server "cd /home/isucon/private_isu/webapp/golang; PATH=/home/isucon/.local/go/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin make"
 
+  # to remove old log
+  # ssh -t $server "sudo truncate -s 0 /var/log/nginx/access.log; sudo truncate -s 0 /var/log/mysql/slow.log"
+
   scp ./isucari_linux $server:/home/isucon/isucari/webapp/go/isucari
   # rsync -vau ../sql/ $server:/home/isucon/isucari/webapp/sql/
   ssh -t $server "sudo systemctl start isucari.golang.service"
