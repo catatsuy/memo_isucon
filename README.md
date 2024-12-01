@@ -370,6 +370,28 @@ LimitNPROC=1006500
 
 ## Ubuntu
 
+### grub
+
+https://wiki.ubuntu.com/SecurityTeam/KnowledgeBase/SpectreAndMeltdown/MitigationControls
+
+grubの設定を変える。EC2の場合 `/etc/default/grub.d/50-cloudimg-settings.cfg` が上書きしているので、更に上書きする必要がある。
+
+当たり前だが、脆弱性が有効になるので本番では絶対に使わないこと。
+
+```/etc/default/grub.d/90-custom-settings.cfg
+GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off"
+```
+
+```sh
+sudo update-grub
+sudo reboot
+```
+
+```sh
+$ sudo cat /proc/cmdline
+BOOT_IMAGE=/vmlinuz-6.8.0-1016-aws root=PARTUUID=1eb94c54-dcc4-4822-bf70-addb7ca9d294 ro console=tty1 console=ttyS0 nvme_core.io_timeout=4294967295 noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off panic=-1
+```
+
 ### AppArmor
 
 ```
