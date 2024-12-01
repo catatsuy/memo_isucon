@@ -1025,29 +1025,57 @@ if err != nil {
 
 pprofではネットワークで待ちになっている時間などは顕在化しないので、ボトルネックがアプリケーションのCPUに移らない限り、取る意味はほぼない。
 
-https://godoc.org/github.com/pkg/profile を使うと楽。必ずStopを呼び出す必要があるので以下のようにして無理矢理呼び出すのがおすすめ。
-
-デフォルトは`os.CreateTemp("", "profile")`で指定されたディレクトリにファイルができる。環境変数`TMPDIR`にもよるが、Linuxなら`/tmp/profile/cpu.pprof`というファイルができるはず。systemdならPrivateTmpがデフォルトで有効なので注意。
+initializeの最適化は特に意味がないので、initializeの後に呼び出している。別にmainから呼び出して、専用エンドポイントでstopしてもよい。
 
 ```go
-import "github.com/pkg/profile"
+import "runtime/pprof"
 
-var (
-	profileProfile interface{ Stop() }
-)
+func startCPUProfile(filePath string) error {
+	var err error
+	profileFile, err = os.Create(filePath)
+	if err != nil {
+		return err
+	}
 
-func init() {
-	profileProfile = profile.Start(profile.ProfilePath("/home/isucon/profile"))
-	// memory
-	// profile.Start(profile.MemProfile, profile.ProfilePath("/home/isucon/profile"))
+	pprof.StartCPUProfile(profileFile)
+	return nil
 }
 
-func getProfileStop(w http.ResponseWriter, r *http.Request) {
-	profileProfile.Stop()
+func stopCPUProfile() {
+	pprof.StopCPUProfile()
+	profileFile.Close()
+}
+
+func isProfilingEnabled() bool {
+	return os.Getenv("PPROF") == "1"
+}
+
+func postInitialize(w http.ResponseWriter, r *http.Request) {
+	// ...
+
+	if isProfilingEnabled() {
+		if err := startCPUProfile("/home/isucon/cpu.pprof"); err != nil {
+			return
+		}
+		go func() {
+			<-time.After(65 * time.Second)
+			stopCPUProfile()
+		}()
+	}
+
+	// ...
 }
 ```
 
-`apt install graphviz`してから`go tool pprof --pdf /home/isucon/profile/cpu.pprof > tmp.pdf`するとPDFになる。LinuxのpprofファイルをMacで処理することもできる。
+`apt install graphviz`してから`go tool pprof --pdf /home/isucon/cpu.pprof > cpu.pdf`するとPDFになる。LinuxのpprofファイルをMacで処理することもできる。
+
+#### pgo
+
+本番環境で作成したcpu.pprofを手元に持ってくる。
+
+```sh
+go build -pgo=cpu.pprof -o app
+```
 
 ### Goでボトルネックになりやすいところ
 
