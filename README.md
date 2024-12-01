@@ -1283,8 +1283,9 @@ dstat -tlamp
 
 ### rsync
 
-```
-rsync -vau /hoge/fuga/ catatsuy.org:/hoge/fuga/
+```sh
+rsync -vau /hoge/fuga/ isu01:/hoge/fuga/
+rsync -vau isu01:/hoge/fuga/ .
 ```
 
 ディレクトリの最後には必ず `/` を付ける
