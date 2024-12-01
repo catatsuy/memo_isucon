@@ -384,11 +384,8 @@ grubの設定を変える。EC2の場合 `/etc/default/grub.d/50-cloudimg-settin
 
 当たり前だが、脆弱性が有効になるので本番では絶対に使わないこと。
 
-```/etc/default/grub.d/90-custom-settings.cfg
-GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT noibrs noibpb nopti nospectre_v2 nospectre_v1 l1tf=off nospec_store_bypass_disable no_stf_barrier mds=off tsx=on tsx_async_abort=off mitigations=off"
-```
-
 ```sh
+sudo cp memo_isucon/etc/default/grub.d/90-custom-settings.cfg /etc/default/grub.d/90-custom-settings.cfg
 sudo update-grub
 sudo reboot
 ```
