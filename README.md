@@ -1055,6 +1055,8 @@ initializeの最適化は特に意味がないので、initializeの後に呼び
 ```go
 import "runtime/pprof"
 
+var profileFile *os.File
+
 func startCPUProfile(filePath string) error {
 	var err error
 	profileFile, err = os.Create(filePath)
