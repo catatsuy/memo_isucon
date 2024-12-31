@@ -718,63 +718,31 @@ func HeavyGet(key int) (string, error) {
 ### Goで簡易ジョブキュー
 
 ```go
-type cacheLog struct {
-	// Setが多いならsync.Mutex
-	sync.Mutex
-	items  []isulogger.Log
-	logger *isulogger.Isulogger
-}
+package main
 
-func SetLogger(d QueryExecutor) error {
-	var err error
-	mCacheLog.logger, err = Logger(d)
+import (
+	"time"
 
-	return err
-}
+	"github.com/catatsuy/cache"
+)
 
-func SetDB(d QueryExecutor) {
-	var err error
-	mCacheLog.logger, err = Logger(d)
-	if err != nil {
-		log.Printf("[WARN] new logger failed. err:%s", err)
-		panic(err)
-	}
+var mCacheChairLocation = cache.NewRollingCache[int](100)
 
-	c := time.Tick(1 * time.Second)
+func main() {
+	mCacheChairLocation.Append(10)
+
+	c := time.Tick(2 * time.Second)
 	go func() {
 		for {
-			ls := mCacheLog.Rotate()
-			err := mCacheLog.logger.SendBulk(ls)
-			if err != nil {
-				log.Printf("[WARN] logger send failed. err:%s", err)
-			}
-			<-c
+			lists := mCacheChairLocation.Rotate()
+			// bulk insert
+			_ = lists
 		}
+
+		<-c
 	}()
-}
 
-var mCacheLog = NewCacheLog()
-
-func NewCacheLog() *cacheLog {
-	m := make([]isulogger.Log, 0, 100)
-	c := &cacheLog{
-		items: m,
-	}
-	return c
-}
-
-func (c *cacheLog) Append(value isulogger.Log) {
-	c.Lock()
-	c.items = append(c.items, value)
-	c.Unlock()
-}
-
-func (c *cacheLog) Rotate() []isulogger.Log {
-	c.Lock()
-	tmp := c.items
-	c.items = make([]isulogger.Log, 0, 100)
-	c.Unlock()
-	return tmp
+	time.Sleep(10 * time.Second)
 }
 ```
 
