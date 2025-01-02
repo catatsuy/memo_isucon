@@ -819,6 +819,30 @@ import (
 	proxy "github.com/shogo82148/go-sql-proxy"
 )
 
+func init() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+}
+
+func MyRegisterTracer() {
+	for _, driver := range sql.Drivers() {
+		if strings.HasSuffix(driver, ":mytrace") {
+			continue
+		}
+		db, err := sql.Open(driver, "")
+		if err != nil {
+			continue
+		}
+		defer db.Close()
+		sql.Register(driver+":mytrace", proxy.NewProxyContext(db.Driver(), proxy.NewTraceHooks(proxy.TracerOptions{
+			Filter: proxy.PackageFilter{
+				"database/sql":                       struct{}{},
+				"github.com/shogo82148/go-sql-proxy": struct{}{},
+				"github.com/jmoiron/sqlx":            struct{}{},
+			},
+		})))
+	}
+}
+
 var isDev bool
 if os.Getenv("DEV") == "1" {
 	isDev = true
@@ -826,9 +850,9 @@ if os.Getenv("DEV") == "1" {
 
 driverName := "mysql"
 if isDev {
-	proxy.RegisterTracer()
+	MyRegisterTracer()
 
-	driverName = "mysql:trace"
+	driverName = "mysql:mytrace"
 }
 ```
 
