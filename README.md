@@ -824,23 +824,13 @@ func init() {
 }
 
 func MyRegisterTracer() {
-	for _, driver := range sql.Drivers() {
-		if strings.HasSuffix(driver, ":mytrace") {
-			continue
-		}
-		db, err := sql.Open(driver, "")
-		if err != nil {
-			continue
-		}
-		defer db.Close()
-		sql.Register(driver+":mytrace", proxy.NewProxyContext(db.Driver(), proxy.NewTraceHooks(proxy.TracerOptions{
-			Filter: proxy.PackageFilter{
-				"database/sql":                       struct{}{},
-				"github.com/shogo82148/go-sql-proxy": struct{}{},
-				"github.com/jmoiron/sqlx":            struct{}{},
-			},
-		})))
-	}
+	sql.Register("mysql:mytrace", proxy.NewProxyContext(&mysql.MySQLDriver{}, proxy.NewTraceHooks(proxy.TracerOptions{
+		Filter: proxy.PackageFilter{
+			"database/sql":                       struct{}{},
+			"github.com/shogo82148/go-sql-proxy": struct{}{},
+			"github.com/jmoiron/sqlx":            struct{}{},
+		},
+	})))
 }
 
 var isDev bool
