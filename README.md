@@ -824,13 +824,11 @@ if os.Getenv("DEV") == "1" {
 	isDev = true
 }
 
-var err error
+driverName := "mysql"
 if isDev {
 	proxy.RegisterTracer()
 
-	db, err = sql.Open("mysql:trace", dsn)
-} else {
-	db, err = sql.Open("mysql", dsn)
+	driverName = "mysql:trace"
 }
 ```
 
