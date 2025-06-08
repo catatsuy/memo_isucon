@@ -1,6 +1,12 @@
+- name: Get latest nginx-build version
+  uri:
+    url: https://api.github.com/repos/cubicdaiya/nginx-build/releases/latest
+    body_format: json
+  register: nginx_latest_release
+
 - name: Download nginx-build
   get_url:
-    url: https://github.com/cubicdaiya/nginx-build/releases/download/v{{ nginx_build_version }}/nginx-build-linux-{{ arch_res.stdout }}-{{ nginx_build_version }}.tar.gz
+    url: "https://github.com/cubicdaiya/nginx-build/releases/download/{{ nginx_latest_release.json.tag_name }}/nginx-build-linux-{{ arch_res.stdout }}-{{ nginx_latest_release.json.tag_name | replace('v', '') }}.tar.gz"
     dest: /tmp/nginx-build-linux.tar.gz
 
 - name: Extract nginx-build

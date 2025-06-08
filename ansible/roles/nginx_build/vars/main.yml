@@ -1,3 +1,1 @@
 ---
-# datasource=github-releases depName=cubicdaiya/nginx-build
-nginx_build_version: 0.15.1
