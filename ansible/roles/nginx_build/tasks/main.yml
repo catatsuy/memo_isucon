@@ -1,8 +1,22 @@
+- name: Get system architecture
+  command: dpkg --print-architecture
+  register: arch_res
+  changed_when: false
+  check_mode: no
+
 - name: Get latest nginx-build version
   uri:
     url: https://api.github.com/repos/cubicdaiya/nginx-build/releases/latest
     body_format: json
   register: nginx_latest_release
+
+- name: Assert that tag_name is available
+  assert:
+    that:
+      - nginx_latest_release.json is defined
+      - nginx_latest_release.json.tag_name is defined
+      - nginx_latest_release.json.tag_name is string
+    fail_msg: "Failed to get tag_name from GitHub API response. Check API rate limits or network connectivity."
 
 - name: Download nginx-build
   get_url:
