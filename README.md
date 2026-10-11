@@ -74,10 +74,6 @@ $ mysql --help | grep my.cnf
 /etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
 ```
 
-Ubuntuなら`/etc/mysql/debian.cnf`にパスワードがある。`/var/log/mysqld.log`をgrepする手もある。
-
-`/etc/mysql/debian.cnf`を`$HOME/.my.cnf`にコピーすればパスワードをなしにアクセスできる。
-
 日本語が入力できない場合は以下の設定をコメントアウトすると直るかも。
 
 ```
@@ -307,7 +303,7 @@ sudo dd if=/dev/zero of=/dummy bs=1M count=50
 ```sh
 cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json" --sort=sum --reverse --filters 'Time > TimeAgo("5m")'
 
-cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+\.json","/users/\d+\.json","/transactions/\d+.png","/upload/[0-9a-f]+\.jpg" --sort=sum --reverse --filters 'Time > TimeAgo("5m")' | notify_slack -snippet -filetype txt
+cat /var/log/nginx/access.log | alp ltsv -m "^/items/\d+\.json","^/new_items/\d+\.json","/users/\d+\.json","/transactions/\d+.png","/upload/[0-9a-f]+\.jpg" --sort=sum --reverse --filters 'Time > TimeAgo("5m")' | notify_slack -snippet -filename alp.txt
 
 truncate -s 0 /var/log/nginx/access.log
 ```
