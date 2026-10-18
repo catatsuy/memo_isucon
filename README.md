@@ -478,7 +478,8 @@ Host isu01
   HostName xxx
   User isucon
   Port 22
-  IdentityFile ~/.ssh/id_rsa.github
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/id_ed25519
   ForwardAgent yes
 
 Host isu02
