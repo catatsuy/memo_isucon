@@ -21,3 +21,7 @@
     - role: alp
       tags:
         - alp
+
+    - role: ssh
+      tags:
+        - ssh
